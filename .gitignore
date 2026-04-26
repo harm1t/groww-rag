@@ -50,3 +50,9 @@ frontend/.env.production.local
 
 # Windsurf
 .windsurf/
+
+# Logs
+logs/
+
+# SQLite thread store (runtime state, not source)
+data/threads.db

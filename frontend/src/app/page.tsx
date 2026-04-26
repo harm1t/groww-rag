@@ -25,25 +25,32 @@ export default function Home() {
 
   const loadThreads = async () => {
     try {
+      console.log('Loading threads from:', API_URL);
       const response = await fetch(`${API_URL}/threads`);
+      console.log('Response status:', response.status);
       const data = await response.json();
       setThreads(data.threads || []);
     } catch (error) {
       console.error('Failed to load threads:', error);
+      console.error('API URL:', API_URL);
     }
   };
 
   const createThread = async () => {
     setIsLoading(true);
     try {
+      console.log('Creating thread at:', API_URL);
       const response = await fetch(`${API_URL}/threads`, {
         method: 'POST',
       });
+      console.log('Create thread response status:', response.status);
       const thread = await response.json();
+      console.log('Created thread:', thread);
       setActiveThreadId(thread.id);
       await loadThreads();
     } catch (error) {
       console.error('Failed to create thread:', error);
+      console.error('API URL:', API_URL);
     } finally {
       setIsLoading(false);
     }
