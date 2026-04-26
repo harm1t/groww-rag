@@ -40,14 +40,14 @@ jobs:
     steps:
       # ── 1. Checkout ──────────────────────────────────────────────────────
       - name: "① Checkout repository"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.2
         with:
           # Fetch full history so git push works cleanly
           fetch-depth: 1
 
       # ── 2. Python setup ──────────────────────────────────────────────────
       - name: "② Set up Python 3.11"
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: '3.11'
           cache: 'pip'   # Cache pip downloads between runs
