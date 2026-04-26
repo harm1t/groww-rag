@@ -36,3 +36,17 @@ data/chroma/
 .pytest_cache/
 htmlcov/
 .coverage
+
+# Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.vercel/
+frontend/.turbo/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Windsurf
+.windsurf/
