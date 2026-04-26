@@ -1,0 +1,31 @@
+2026-04-26T17:29:09 [INFO] __main__ — ============================================================
+2026-04-26T17:29:09 [INFO] __main__ — Starting local scheduler for ingestion pipeline
+2026-04-26T17:29:09 [INFO] __main__ — ============================================================
+2026-04-26T17:29:09 [INFO] __main__ — Log file: ./logs/ingestion_20260426_115909.log
+2026-04-26T17:29:09 [INFO] __main__ — Environment variables loaded from .env
+2026-04-26T17:29:09 [INFO] __main__ — All required environment variables are present
+2026-04-26T17:29:09 [INFO] __main__ — CHROMA_API_KEY: ✓
+2026-04-26T17:29:09 [INFO] __main__ — CHROMA_TENANT: f24bea7d-e864-4010-a391-12b7c735a180
+2026-04-26T17:29:09 [INFO] __main__ — CHROMA_DATABASE: grow-rag-test
+2026-04-26T17:29:09 [INFO] __main__ — Importing ingestion pipeline...
+2026-04-26T17:29:12 [INFO] __main__ — Starting ingestion pipeline...
+2026-04-26T17:29:12 [INFO] src.ingestion.run_pipeline — ═══ Pipeline run 20260426T115912Z started ═══
+2026-04-26T17:29:12 [INFO] src.ingestion.run_pipeline — ── Phase 4.0: Scraping ──
+2026-04-26T17:29:12 [INFO] src.ingestion.hash_store — [HashStore] Loaded 5 hashes from ./data/hashes.json
+2026-04-26T17:29:12 [INFO] src.ingestion.scraping_service — [ScrapingService] Starting scrape of 5 URLs at 2026-04-26T11:59:12.976245+00:00
+2026-04-26T17:29:13 [INFO] src.ingestion.scraping_service — [ScrapingService] No changes for ppfas_flexi_cap (https://groww.in/mutual-funds/parag-parikh-long-term-value-fund-direct-growth)
+2026-04-26T17:29:15 [INFO] src.ingestion.scraping_service — [ScrapingService] No changes for ppfas_large_cap (https://groww.in/mutual-funds/parag-parikh-large-cap-fund-direct-growth)
+2026-04-26T17:29:17 [INFO] src.ingestion.scraping_service — [ScrapingService] No changes for ppfas_elss (https://groww.in/mutual-funds/parag-parikh-elss-tax-saver-fund-direct-growth)
+2026-04-26T17:29:19 [INFO] src.ingestion.scraping_service — [ScrapingService] No changes for ppfas_conservative_hybrid (https://groww.in/mutual-funds/parag-parikh-conservative-hybrid-fund-direct-growth)
+2026-04-26T17:29:22 [INFO] src.ingestion.scraping_service — [ScrapingService] No changes for ppfas_arbitrage (https://groww.in/mutual-funds/parag-parikh-arbitrage-fund-direct-growth)
+2026-04-26T17:29:24 [INFO] src.ingestion.scraping_service — [ScrapingService] Scrape complete: {'scraped': 5, 'updated': 0, 'skipped': 5, 'errors': 0}
+2026-04-26T17:29:24 [INFO] src.ingestion.run_pipeline — ── No content changes detected — skipping chunk/embed/upsert ──
+2026-04-26T17:29:24 [INFO] src.ingestion.run_pipeline — ═══ Pipeline run 20260426T115912Z complete ═══
+    Scrape:  scraped=5  updated=0  skipped=5  errors=0
+    Chunk:   0 chunks produced
+    Embed:   0 chunks embedded
+    Upsert:  0 chunks upserted to Chroma Cloud
+2026-04-26T17:29:24 [INFO] __main__ — ============================================================
+2026-04-26T17:29:24 [INFO] __main__ — Ingestion pipeline completed successfully
+2026-04-26T17:29:24 [INFO] __main__ — ============================================================
+2026-04-26T17:29:24 [INFO] __main__ — Full log available at: ./logs/ingestion_20260426_115909.log

@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply m-0 p-0 box-border;
+  }
+
+  body {
+    @apply bg-background text-on-background font-sans antialiased;
+  }
+
+  h1 {
+    @apply text-h1;
+  }
+
+  h2 {
+    @apply text-h2;
+  }
+
+  h3 {
+    @apply text-h3;
+  }
+
+  p {
+    @apply text-body-md;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-outline rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-on-surface-variant;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-on-primary rounded-lg px-6 py-3 font-medium transition-all hover:opacity-90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-on-secondary rounded-lg px-6 py-3 font-medium transition-all hover:opacity-90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-primary border border-primary rounded-lg px-6 py-3 font-medium transition-all hover:bg-primary-container hover:text-on-primary-container active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg border border-outline bg-surface-container-low text-on-surface outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant;
+  }
+
+  .card {
+    @apply bg-surface-container-lowest rounded-lg shadow-ambient border border-surface-container;
+  }
+
+  .message-bubble-user {
+    @apply bg-primary text-on-primary rounded-lg rounded-br-sm px-4 py-3 max-w-[75%] self-end;
+  }
+
+  .message-bubble-assistant {
+    @apply bg-surface-container-low text-on-surface rounded-lg rounded-bl-sm px-4 py-3 max-w-[75%] self-start border border-surface-container;
+  }
+}

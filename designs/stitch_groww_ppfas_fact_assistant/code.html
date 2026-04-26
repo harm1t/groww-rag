@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Groww x PPFAS Mutual Fund FAQ Assistant</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-dim": "#cbdbf5",
+                      "on-tertiary-fixed": "#000b62",
+                      "primary-container": "#00d09c",
+                      "on-error-container": "#93000a",
+                      "primary-fixed-dim": "#2fe0aa",
+                      "on-primary-fixed": "#002116",
+                      "surface-container": "#e5eeff",
+                      "on-tertiary-container": "#142dce",
+                      "inverse-on-surface": "#eaf1ff",
+                      "surface-container-high": "#dce9ff",
+                      "tertiary-container": "#a9b2ff",
+                      "on-primary-fixed-variant": "#00513b",
+                      "on-primary-container": "#00533c",
+                      "on-secondary-container": "#5c647a",
+                      "tertiary": "#354ae4",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "error": "#ba1a1a",
+                      "background": "#f8f9ff",
+                      "on-secondary-fixed": "#131b2e",
+                      "surface-variant": "#d3e4fe",
+                      "surface-tint": "#006c4f",
+                      "on-background": "#0b1c30",
+                      "primary-fixed": "#59fdc5",
+                      "outline": "#6b7b72",
+                      "on-surface": "#0b1c30",
+                      "surface-container-low": "#eff4ff",
+                      "secondary": "#565e74",
+                      "surface-container-highest": "#d3e4fe",
+                      "error-container": "#ffdad6",
+                      "inverse-surface": "#213145",
+                      "tertiary-fixed-dim": "#bcc2ff",
+                      "secondary-fixed": "#dae2fd",
+                      "on-error": "#ffffff",
+                      "on-surface-variant": "#3c4a43",
+                      "tertiary-fixed": "#dfe0ff",
+                      "surface-bright": "#f8f9ff",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "inverse-primary": "#2fe0aa",
+                      "on-primary": "#ffffff",
+                      "primary": "#006c4f",
+                      "surface-container-lowest": "#ffffff",
+                      "outline-variant": "#bacac1",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#102bcd",
+                      "secondary-container": "#dae2fd",
+                      "surface": "#f8f9ff",
+                      "on-tertiary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "container-margin": "20px",
+                      "xl": "32px",
+                      "sm": "12px",
+                      "base": "8px",
+                      "xs": "4px",
+                      "lg": "24px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "h2": [
+                              "Inter"
+                      ],
+                      "h1": [
+                              "Inter"
+                      ],
+                      "numeric-lg": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "h3": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "h2": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h1": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "numeric-lg": [
+                              "28px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h3": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex font-body-md text-body-md">
+<!-- SideNavBar (Hidden on Mobile, flex on md+) -->
+<nav class="hidden md:flex bg-[#F8FAFC] dark:bg-slate-950 text-[#00D09C] font-['Inter'] text-sm tracking-tight h-full w-64 border-r border-r border-slate-200 dark:border-slate-800 flat fixed left-0 top-0 h-full flex flex-col p-4 space-y-2 z-50">
+<!-- Header -->
+<div class="mb-lg px-2">
+<div class="font-black text-[#00D09C] text-h3 font-h3 mb-xs"><img alt="Groww Logo" class="h-8 w-auto mb-xs" src="https://lh3.googleusercontent.com/aida/ADBb0uiNF_ZxYMGGqNoeSvWbfxpRVqDl2dZMBtdYFiVHJiZxpZZBLOclBLM9QkuUByrVi80dRs-XnW19lZKv3I8ep8F3sLyn_q7k13dyIzh6d4Kj7FDW4hj2XthRAArkYKZ1LPTaUYK2S7lO2JjMP_X481COcILpgXjE6zN8YMeYXTEOkdIVV3ro1SgfHZFjRJn2wCIG8GG6EUnYJz1gmAPlLIxwec4dXHWdnKQxXZjde0Ff1N2KEJLLSDtrBTaIYvR-oG2d_EqjVi1oGL8"/></div>
+<div class="text-on-surface-variant font-label-sm text-label-sm">Facts-only. No advice.</div>
+</div>
+<!-- Main Nav Tabs -->
+<div class="flex-1 space-y-base">
+<a class="flex items-center space-x-sm px-3 py-2 bg-white dark:bg-slate-900 text-[#00D09C] font-medium shadow-sm rounded-lg transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add_comment</span>
+<span>New Chat</span>
+</a>
+<a class="flex items-center space-x-sm px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all duration-150 ease-in-out flex-wrap" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">history</span>
+<span>Recent Analysis</span><span class="material-symbols-outlined text-[16px] ml-auto text-slate-400">lock</span>
+<div class="w-full text-[10px] text-slate-400 mt-1 block pl-9">In development - unlocks soon</div></a>
+<a class="flex items-center space-x-sm px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all duration-150 ease-in-out flex-wrap" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">receipt_long</span>
+<span>Tax Planning</span><span class="material-symbols-outlined text-[16px] ml-auto text-slate-400">lock</span>
+<div class="w-full text-[10px] text-slate-400 mt-1 block pl-9">In development - unlocks soon</div></a>
+<a class="flex items-center space-x-sm px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all duration-150 ease-in-out flex-wrap" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+<span>Account</span><span class="material-symbols-outlined text-[16px] ml-auto text-slate-400">lock</span>
+<div class="w-full text-[10px] text-slate-400 mt-1 block pl-9">In development - unlocks soon</div></a>
+</div>
+<!-- CTA & Footer -->
+<div class="mt-auto space-y-md pt-md border-t border-slate-200 dark:border-slate-800">
+<button class="w-full text-center text-sm font-medium text-error py-2 hover:bg-error-container rounded-lg transition-colors">Clear History</button>
+<div class="space-y-base">
+<a class="flex items-center space-x-sm px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center space-x-sm px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all duration-150 ease-in-out flex-wrap" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">contact_support</span>
+<span>Support</span><span class="material-symbols-outlined text-[16px] ml-auto text-slate-400">lock</span>
+<div class="w-full text-[10px] text-slate-400 mt-1 block pl-9">In development - unlocks soon</div></a>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col md:ml-64 w-full min-h-screen max-w-4xl mx-auto px-container-margin md:px-xl py-lg">
+<!-- Top Disclaimer (Mobile visible mostly, but good to have top level) -->
+<div class="w-full flex justify-center mb-xl">
+<div class="bg-surface-variant text-on-surface-variant px-md py-xs rounded-full font-label-sm text-label-sm flex items-center space-x-2">
+<span class="material-symbols-outlined text-[16px]">info</span>
+<span>Facts-only. No investment advice.</span>
+</div>
+</div>
+<!-- Welcome Area -->
+<div class="flex-1 flex flex-col items-center justify-center space-y-xl text-center pb-32">
+<div class="space-y-sm"><div class="flex flex-col items-center mb-md"><div class="relative flex items-center space-x-4 p-4 bg-white rounded-full shadow-lg border border-slate-100"><img alt="Groww Logo" class="w-auto object-contain h-8" src="https://lh3.googleusercontent.com/aida/ADBb0uiNF_ZxYMGGqNoeSvWbfxpRVqDl2dZMBtdYFiVHJiZxpZZBLOclBLM9QkuUByrVi80dRs-XnW19lZKv3I8ep8F3sLyn_q7k13dyIzh6d4Kj7FDW4hj2XthRAArkYKZ1LPTaUYK2S7lO2JjMP_X481COcILpgXjE6zN8YMeYXTEOkdIVV3ro1SgfHZFjRJn2wCIG8GG6EUnYJz1gmAPlLIxwec4dXHWdnKQxXZjde0Ff1N2KEJLLSDtrBTaIYvR-oG2d_EqjVi1oGL8"/><span class="text-slate-300 font-bold">x</span><img alt="PPFAS Logo" class="w-auto object-contain h-8" src="https://lh3.googleusercontent.com/aida/ADBb0uiZyG5Ms1P1Rb9dV7jRsOltAHKjxdEoGcm4Kthy6SUzxBCeKW9SfIlp8Ze366voWRg9ypcz2jrt17I3R8IB07eojPHFYdihOU5lR5PRkXfVK3bjXUvEzFnsnMCl8koPxsmmc2WyWjADGl1HVO9L1o_z8lphA4BMthf0ZdOVzpMlfCgMlo00H1Nk8wNOLRjZFPklpjNeEBD3mh0og1AGJ6MRXE6X79uvlOtQYBhPLhrppERdOeJrP8JjWtdum-hGrJ0gMYD96dOJAA"/><div class="absolute -bottom-1 -right-1 bg-primary text-white p-1 rounded-full border-2 border-white"><span class="material-symbols-outlined text-sm">smart_toy</span></div></div></div>
+<h1 class="font-h1 text-h1 text-on-background">Hello! I'm your PPFAS Mutual Fund Assistant.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Ask me factual questions about our funds, expense ratios, exit loads, or statements.</p>
+</div>
+<!-- Bento Grid of Example Questions -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md w-full max-w-3xl mt-xl">
+<!-- Card 1 -->
+<button class="bg-surface-container-lowest border border-outline-variant hover:border-primary-container p-lg rounded-xl text-left flex flex-col space-y-sm transition-all shadow-[0px_4px_20px_rgba(15,23,42,0.05)] hover:-translate-y-1">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-body-sm text-body-sm text-on-surface">Know your NAV</span>
+</button>
+<!-- Card 2 -->
+<button class="bg-surface-container-lowest border border-outline-variant hover:border-primary-container p-lg rounded-xl text-left flex flex-col space-y-sm transition-all shadow-[0px_4px_20px_rgba(15,23,42,0.05)] hover:-translate-y-1">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-body-sm text-body-sm text-on-surface">What is minimum SIP?</span>
+</button>
+<!-- Card 3 -->
+<button class="bg-surface-container-lowest border border-outline-variant hover:border-primary-container p-lg rounded-xl text-left flex flex-col space-y-sm transition-all shadow-[0px_4px_20px_rgba(15,23,42,0.05)] hover:-translate-y-1">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">download</span>
+<span class="font-body-sm text-body-sm text-on-surface">What is AUM?</span>
+</button>
+</div>
+</div>
+<!-- Fixed Input Area at Bottom -->
+<div class="fixed bottom-0 left-0 md:left-64 right-0 p-container-margin md:p-xl bg-gradient-to-t from-background via-background to-transparent pointer-events-none">
+<div class="max-w-3xl mx-auto w-full pointer-events-auto">
+<div class="relative bg-surface-container-lowest border border-outline-variant rounded-full shadow-[0px_4px_20px_rgba(15,23,42,0.05)] focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+<input class="w-full bg-transparent border-none rounded-full py-md pl-lg pr-16 text-on-surface font-body-md text-body-md focus:ring-0 placeholder:text-outline" placeholder="Ask a factual question about PPFAS funds..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-tint transition-colors">
+<span class="material-symbols-outlined text-[20px]">send</span>
+</button>
+</div>
+<div class="text-center mt-xs font-label-sm text-label-sm text-outline">
+                    Groww x PPFAS Assistant can make mistakes. Verify important financial data.
+                </div>
+</div>
+</div>
+</main>
+<!-- TopAppBar (Mobile Only - Fallback for Nav) -->
+<header class="md:hidden fixed top-0 w-full bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 h-16 flex justify-between items-center px-5 z-40">
+<div class="flex items-center"><img alt="Groww Logo" class="h-6 w-auto" src="https://lh3.googleusercontent.com/aida/ADBb0uiNF_ZxYMGGqNoeSvWbfxpRVqDl2dZMBtdYFiVHJiZxpZZBLOclBLM9QkuUByrVi80dRs-XnW19lZKv3I8ep8F3sLyn_q7k13dyIzh6d4Kj7FDW4hj2XthRAArkYKZ1LPTaUYK2S7lO2JjMP_X481COcILpgXjE6zN8YMeYXTEOkdIVV3ro1SgfHZFjRJn2wCIG8GG6EUnYJz1gmAPlLIxwec4dXHWdnKQxXZjde0Ff1N2KEJLLSDtrBTaIYvR-oG2d_EqjVi1oGL8"/></div>
+<button class="text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+</body></html>

@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# Data (large/generated — excluded from git)
+# data/raw/     → raw HTML fetched from Groww (large, reproducible)
+# data/scraped/ → chunked JSON per run (large, reproducible)
+# data/chroma/  → no longer used (Chroma Cloud is remote)
+data/raw/
+data/scraped/
+data/chroma/
+
+# hashes.json MUST be tracked — the GitHub Actions runner reads it
+# on each run to skip unchanged pages. Without it, every run re-scrapes
+# all 5 URLs and re-upserts identical content to Chroma Cloud.
+!data/hashes.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage

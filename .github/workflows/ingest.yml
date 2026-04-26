@@ -1,0 +1,133 @@
+name: Daily PPFAS Data Refresh
+
+# ── Triggers ──────────────────────────────────────────────────────────────────
+on:
+  schedule:
+    # 3:45 AM UTC  =  9:15 AM IST (Indian Standard Time, UTC+5:30)
+    # Runs every day before Indian equity market open.
+    - cron: '45 3 * * *'
+
+  workflow_dispatch:
+    # Allow manual trigger from GitHub UI (Actions tab → Run workflow)
+    # or via: gh workflow run ingest.yml
+    inputs:
+      force_rescrape:
+        description: 'Force re-scrape all URLs (ignore cached hashes)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+# ── Concurrency ───────────────────────────────────────────────────────────────
+# Cancel any in-progress run if a new one is triggered (prevents duplicate upserts)
+concurrency:
+  group: ingest-pipeline
+  cancel-in-progress: true
+
+# ── Permissions ───────────────────────────────────────────────────────────────
+permissions:
+  contents: write   # Required to commit updated hashes.json back to repo
+
+jobs:
+  # ────────────────────────────────────────────────────────────────────────────
+  ingest:
+    name: "Scrape → Chunk → Embed → Upsert to Chroma Cloud"
+    runs-on: ubuntu-latest
+    timeout-minutes: 20   # Safety: kill stuck runs before they eat quota
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────────────
+      - name: "① Checkout repository"
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history so git push works cleanly
+          fetch-depth: 1
+
+      # ── 2. Python setup ──────────────────────────────────────────────────
+      - name: "② Set up Python 3.11"
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'   # Cache pip downloads between runs
+
+      # ── 3. Install dependencies ──────────────────────────────────────────
+      - name: "③ Install dependencies"
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # ── 4. (Optional) Force rescrape ─────────────────────────────────────
+      - name: "④ Force rescrape (clear hashes if requested)"
+        if: github.event.inputs.force_rescrape == 'true'
+        run: |
+          echo "{}" > data/hashes.json
+          echo "Force rescrape enabled — all 5 URLs will be re-fetched."
+
+      # ── 5. Run the full ingestion pipeline ───────────────────────────────
+      #
+      #   Phase 4.0  Scrape   — Fetch 5 Groww pages, SHA-256 change detection
+      #   Phase 4.1  Chunk    — GrowwPageChunker / RecursiveChunker + dedup
+      #   Phase 4.2  Embed    — BAAI/bge-small-en-v1.5 (384-dim, local on runner)
+      #   Phase 4.3  Upsert   — HTTPS POST to Chroma Cloud (api.trychroma.com)
+      #
+      - name: "⑤ Run ingestion pipeline"
+        env:
+          # ── Embedding (runs locally on runner — no API key needed) ────────
+          EMBED_MODEL: BAAI/bge-small-en-v1.5
+          EMBED_BATCH_SIZE: 32
+
+          # ── Chroma Cloud credentials ──────────────────────────────────────
+          # Set these in: GitHub repo → Settings → Secrets and variables
+          #               → Actions → New repository secret
+          CHROMA_API_KEY: ${{ secrets.CHROMA_API_KEY }}
+          CHROMA_TENANT: ${{ secrets.CHROMA_TENANT }}
+          CHROMA_DATABASE: ${{ secrets.CHROMA_DATABASE }}
+          CHROMA_HOST: api.trychroma.com
+          INGEST_CHROMA_COLLECTION: mf_faq_chunks
+
+          # ── Scraping config ───────────────────────────────────────────────
+          INGEST_USER_AGENT: "PPFAS-MF-FAQ-Bot/1.0 (GitHub Actions)"
+          INGEST_HASH_STORE_PATH: ./data/hashes.json
+          INGEST_RAW_HTML_DIR: ./data/raw
+          INGEST_SCRAPED_DIR: ./data/scraped
+          INGEST_REQUEST_TIMEOUT: 30
+          INGEST_RATE_LIMIT_SECS: 2.0
+        run: python -m src.ingestion.run_pipeline
+
+      # ── 6. Commit updated hashes back to repo ────────────────────────────
+      #
+      # hashes.json tracks which pages changed — committing it prevents
+      # re-scraping + re-upserting identical content on the next daily run.
+      # Raw HTML (data/raw/) is also committed for traceability.
+      #
+      - name: "⑥ Commit updated hashes and scraped content"
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/hashes.json
+          git add data/raw/    || true    # raw HTML (may be gitignored — soft fail)
+          git add data/scraped/ || true   # manifest JSON (soft fail if nothing new)
+          git diff --staged --quiet \
+            && echo "No changes to commit — data unchanged since last run." \
+            || git commit -m "chore(data): daily refresh $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push || echo "Nothing to push."
+
+      # ── 7. Print run summary ─────────────────────────────────────────────
+      - name: "⑦ Print run summary"
+        if: always()
+        run: |
+          echo "──────────────────────────────────────────"
+          echo "  Run:      ${{ github.run_number }}"
+          echo "  Trigger:  ${{ github.event_name }}"
+          echo "  Time:     $(date -u +'%Y-%m-%d %H:%M UTC')"
+          echo "  Status:   ${{ job.status }}"
+          echo "  Chroma:   grow-rag-test → mf_faq_chunks"
+          echo "──────────────────────────────────────────"
+          # Print the last manifest if it exists
+          MANIFEST=$(ls -t data/scraped/*/  _manifest.json 2>/dev/null | head -1 || true)
+          if [ -f "$MANIFEST" ]; then
+            echo "Last manifest:"
+            cat "$MANIFEST"
+          fi

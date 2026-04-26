@@ -1,0 +1,75 @@
+2026-04-26T17:15:10 [INFO] __main__ — ============================================================
+2026-04-26T17:15:10 [INFO] __main__ — Starting local scheduler for ingestion pipeline
+2026-04-26T17:15:10 [INFO] __main__ — ============================================================
+2026-04-26T17:15:10 [INFO] __main__ — Log file: ./logs/ingestion_20260426_114510.log
+2026-04-26T17:15:10 [INFO] __main__ — Environment variables loaded from .env
+2026-04-26T17:15:10 [INFO] __main__ — All required environment variables are present
+2026-04-26T17:15:10 [INFO] __main__ — CHROMA_API_KEY: ✓
+2026-04-26T17:15:10 [INFO] __main__ — CHROMA_TENANT: f24bea7d-e864-4010-a391-12b7c735a180
+2026-04-26T17:15:10 [INFO] __main__ — CHROMA_DATABASE: grow-rag-test
+2026-04-26T17:15:10 [INFO] __main__ — Importing ingestion pipeline...
+2026-04-26T17:15:13 [INFO] __main__ — Starting ingestion pipeline...
+2026-04-26T17:15:13 [INFO] src.ingestion.run_pipeline — ═══ Pipeline run 20260426T114513Z started ═══
+2026-04-26T17:15:13 [INFO] src.ingestion.run_pipeline — ── Phase 4.0: Scraping ──
+2026-04-26T17:15:13 [INFO] src.ingestion.hash_store — [HashStore] Loaded 5 hashes from ./data/hashes.json
+2026-04-26T17:15:13 [INFO] src.ingestion.scraping_service — [ScrapingService] Starting scrape of 5 URLs at 2026-04-26T11:45:13.172576+00:00
+2026-04-26T17:15:13 [INFO] src.ingestion.scraping_service — [ScrapingService] Changes detected for ppfas_flexi_cap (https://groww.in/mutual-funds/parag-parikh-long-term-value-fund-direct-growth)
+2026-04-26T17:15:15 [INFO] src.ingestion.scraping_service — [ScrapingService] Changes detected for ppfas_large_cap (https://groww.in/mutual-funds/parag-parikh-large-cap-fund-direct-growth)
+2026-04-26T17:15:18 [INFO] src.ingestion.scraping_service — [ScrapingService] Changes detected for ppfas_elss (https://groww.in/mutual-funds/parag-parikh-elss-tax-saver-fund-direct-growth)
+2026-04-26T17:15:20 [INFO] src.ingestion.scraping_service — [ScrapingService] Changes detected for ppfas_conservative_hybrid (https://groww.in/mutual-funds/parag-parikh-conservative-hybrid-fund-direct-growth)
+2026-04-26T17:15:23 [INFO] src.ingestion.scraping_service — [ScrapingService] Changes detected for ppfas_arbitrage (https://groww.in/mutual-funds/parag-parikh-arbitrage-fund-direct-growth)
+2026-04-26T17:15:25 [INFO] src.ingestion.scraping_service — [ScrapingService] Scrape complete: {'scraped': 5, 'updated': 5, 'skipped': 0, 'errors': 0}
+2026-04-26T17:15:25 [INFO] src.ingestion.run_pipeline — ── Phase 4.1: Chunking 5 updated pages ──
+2026-04-26T17:15:25 [INFO] src.ingestion.chunker — [Chunker] ppfas_flexi_cap → 10 chunks (10 after dedup)
+2026-04-26T17:15:25 [INFO] src.ingestion.chunker — [Chunker] ppfas_large_cap → 9 chunks (9 after dedup)
+2026-04-26T17:15:25 [INFO] src.ingestion.chunker — [Chunker] ppfas_elss → 8 chunks (8 after dedup)
+2026-04-26T17:15:25 [INFO] src.ingestion.chunker — [Chunker] ppfas_conservative_hybrid → 9 chunks (9 after dedup)
+2026-04-26T17:15:25 [INFO] src.ingestion.chunker — [Chunker] ppfas_arbitrage → 10 chunks (10 after dedup)
+2026-04-26T17:15:25 [INFO] src.ingestion.run_pipeline — [Pipeline] Total chunks produced: 46
+2026-04-26T17:15:25 [INFO] src.ingestion.run_pipeline — ── Phase 4.2: Embedding 46 chunks ──
+2026-04-26T17:15:25 [INFO] src.ingestion.embedder — [Embedder] Loading model BAAI/bge-small-en-v1.5 …
+2026-04-26T17:15:25 [INFO] sentence_transformers.SentenceTransformer — Load pretrained SentenceTransformer: BAAI/bge-small-en-v1.5
+2026-04-26T17:15:28 [INFO] sentence_transformers.SentenceTransformer — Use pytorch device_name: mps
+2026-04-26T17:15:28 [INFO] src.ingestion.embedder — [Embedder] Loaded BAAI/bge-small-en-v1.5 (384-dim) on mps:0
+2026-04-26T17:15:28 [INFO] src.ingestion.embedder — [Embedder] Embedding 46 chunks (batch_size=32) …
+2026-04-26T17:15:29 [INFO] src.ingestion.embedder — [Embedder] Successfully embedded 46 / 46 chunks
+2026-04-26T17:15:29 [INFO] src.ingestion.run_pipeline — [Pipeline] Chunks with valid embeddings: 46
+2026-04-26T17:15:29 [INFO] src.ingestion.run_pipeline — ── Phase 4.3: Upserting to Chroma Cloud ──
+2026-04-26T17:15:29 [INFO] src.ingestion.vector_store — [VectorStore] Connecting to Chroma Cloud — tenant=f24bea7d-e864-4010-a391-12b7c735a180  database=grow-rag-test  host=api.trychroma.com
+2026-04-26T17:15:30 [INFO] httpx — HTTP Request: GET https://api.trychroma.com/api/v2/auth/identity "HTTP/1.1 200 OK"
+2026-04-26T17:15:32 [INFO] httpx — HTTP Request: GET https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180 "HTTP/1.1 200 OK"
+2026-04-26T17:15:32 [INFO] httpx — HTTP Request: GET https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test "HTTP/1.1 200 OK"
+2026-04-26T17:15:32 [INFO] httpx — HTTP Request: POST https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections "HTTP/1.1 200 OK"
+2026-04-26T17:15:32 [INFO] httpx — HTTP Request: GET https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/count?read_level=index_and_wal "HTTP/1.1 200 OK"
+2026-04-26T17:15:32 [INFO] src.ingestion.vector_store — [VectorStore] Collection 'mf_faq_chunks' ready on Chroma Cloud (current count: 46)
+2026-04-26T17:15:33 [INFO] httpx — HTTP Request: GET https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/count?read_level=index_and_wal "HTTP/1.1 200 OK"
+2026-04-26T17:15:33 [INFO] httpx — HTTP Request: POST https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/delete "HTTP/1.1 200 OK"
+2026-04-26T17:15:33 [INFO] src.ingestion.vector_store — [VectorStore] Deleted stale chunks for source_url=https://groww.in/mutual-funds/parag-parikh-long-term-value-fund-direct-growth
+2026-04-26T17:15:34 [INFO] httpx — HTTP Request: GET https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/count?read_level=index_and_wal "HTTP/1.1 200 OK"
+2026-04-26T17:15:34 [INFO] httpx — HTTP Request: POST https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/delete "HTTP/1.1 200 OK"
+2026-04-26T17:15:34 [INFO] src.ingestion.vector_store — [VectorStore] Deleted stale chunks for source_url=https://groww.in/mutual-funds/parag-parikh-large-cap-fund-direct-growth
+2026-04-26T17:15:34 [INFO] httpx — HTTP Request: GET https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/count?read_level=index_and_wal "HTTP/1.1 200 OK"
+2026-04-26T17:15:35 [INFO] httpx — HTTP Request: POST https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/delete "HTTP/1.1 200 OK"
+2026-04-26T17:15:35 [INFO] src.ingestion.vector_store — [VectorStore] Deleted stale chunks for source_url=https://groww.in/mutual-funds/parag-parikh-elss-tax-saver-fund-direct-growth
+2026-04-26T17:15:35 [INFO] httpx — HTTP Request: GET https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/count?read_level=index_and_wal "HTTP/1.1 200 OK"
+2026-04-26T17:15:36 [INFO] httpx — HTTP Request: POST https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/delete "HTTP/1.1 200 OK"
+2026-04-26T17:15:36 [INFO] src.ingestion.vector_store — [VectorStore] Deleted stale chunks for source_url=https://groww.in/mutual-funds/parag-parikh-conservative-hybrid-fund-direct-growth
+2026-04-26T17:15:36 [INFO] httpx — HTTP Request: GET https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/count?read_level=index_and_wal "HTTP/1.1 200 OK"
+2026-04-26T17:15:37 [INFO] httpx — HTTP Request: POST https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/delete "HTTP/1.1 200 OK"
+2026-04-26T17:15:37 [INFO] src.ingestion.vector_store — [VectorStore] Deleted stale chunks for source_url=https://groww.in/mutual-funds/parag-parikh-arbitrage-fund-direct-growth
+2026-04-26T17:15:37 [INFO] httpx — HTTP Request: GET https://api.trychroma.com/api/v2/pre-flight-checks "HTTP/1.1 200 OK"
+2026-04-26T17:15:39 [INFO] httpx — HTTP Request: POST https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/upsert "HTTP/1.1 200 OK"
+2026-04-26T17:15:39 [INFO] src.ingestion.vector_store — [VectorStore] Upserted 46 chunks -> 'mf_faq_chunks'
+2026-04-26T17:15:39 [INFO] httpx — HTTP Request: GET https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/count?read_level=index_and_wal "HTTP/1.1 200 OK"
+2026-04-26T17:15:39 [INFO] src.ingestion.run_pipeline — [Pipeline] Chroma collection count: 46
+2026-04-26T17:15:39 [INFO] httpx — HTTP Request: GET https://api.trychroma.com/api/v2/tenants/f24bea7d-e864-4010-a391-12b7c735a180/databases/grow-rag-test/collections/b1ed5f95-2089-4125-9e49-8a47fa32dab8/count?read_level=index_and_wal "HTTP/1.1 200 OK"
+2026-04-26T17:15:39 [INFO] src.ingestion.run_pipeline — [Pipeline] Manifest → ./data/scraped/20260426T114513Z/_manifest.json
+2026-04-26T17:15:39 [INFO] src.ingestion.run_pipeline — ═══ Pipeline run 20260426T114513Z complete ═══
+    Scrape:  scraped=5  updated=5  skipped=0  errors=0
+    Chunk:   46 chunks produced
+    Embed:   46 chunks embedded
+    Upsert:  46 chunks upserted to Chroma Cloud
+2026-04-26T17:15:39 [INFO] __main__ — ============================================================
+2026-04-26T17:15:39 [INFO] __main__ — Ingestion pipeline completed successfully
+2026-04-26T17:15:39 [INFO] __main__ — ============================================================
+2026-04-26T17:15:39 [INFO] __main__ — Full log available at: ./logs/ingestion_20260426_114510.log

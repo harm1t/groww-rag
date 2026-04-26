@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Investment Insights - Fact-Only FAQ</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-dim": "#cbdbf5",
+                      "on-tertiary-fixed": "#000b62",
+                      "primary-container": "#00d09c",
+                      "on-error-container": "#93000a",
+                      "primary-fixed-dim": "#2fe0aa",
+                      "on-primary-fixed": "#002116",
+                      "surface-container": "#e5eeff",
+                      "on-tertiary-container": "#142dce",
+                      "inverse-on-surface": "#eaf1ff",
+                      "surface-container-high": "#dce9ff",
+                      "tertiary-container": "#a9b2ff",
+                      "on-primary-fixed-variant": "#00513b",
+                      "on-primary-container": "#00533c",
+                      "on-secondary-container": "#5c647a",
+                      "tertiary": "#354ae4",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "error": "#ba1a1a",
+                      "background": "#f8f9ff",
+                      "on-secondary-fixed": "#131b2e",
+                      "surface-variant": "#d3e4fe",
+                      "surface-tint": "#006c4f",
+                      "on-background": "#0b1c30",
+                      "primary-fixed": "#59fdc5",
+                      "outline": "#6b7b72",
+                      "on-surface": "#0b1c30",
+                      "surface-container-low": "#eff4ff",
+                      "secondary": "#565e74",
+                      "surface-container-highest": "#d3e4fe",
+                      "error-container": "#ffdad6",
+                      "inverse-surface": "#213145",
+                      "tertiary-fixed-dim": "#bcc2ff",
+                      "secondary-fixed": "#dae2fd",
+                      "on-error": "#ffffff",
+                      "on-surface-variant": "#3c4a43",
+                      "tertiary-fixed": "#dfe0ff",
+                      "surface-bright": "#f8f9ff",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "inverse-primary": "#2fe0aa",
+                      "on-primary": "#ffffff",
+                      "primary": "#006c4f",
+                      "surface-container-lowest": "#ffffff",
+                      "outline-variant": "#bacac1",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#102bcd",
+                      "secondary-container": "#dae2fd",
+                      "surface": "#f8f9ff",
+                      "on-tertiary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "container-margin": "20px",
+                      "xl": "32px",
+                      "sm": "12px",
+                      "base": "8px",
+                      "xs": "4px",
+                      "lg": "24px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "h2": ["Inter"],
+                      "h1": ["Inter"],
+                      "numeric-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "label-md": ["Inter"],
+                      "h3": ["Inter"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "h2": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "h1": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "numeric-lg": ["28px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                      "h3": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- SideNavBar (Shared Component) -->
+<nav class="hidden md:flex bg-[#F8FAFC] dark:bg-slate-950 font-['Inter'] text-sm tracking-tight h-full w-64 border-r border-r border-slate-200 dark:border-slate-800 flat fixed left-0 top-0 h-full flex flex-col p-4 space-y-2 z-50">
+<!-- Header -->
+<div class="mb-lg px-2">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-black text-[#00D09C] mb-sm shadow-sm overflow-hidden">
+<img alt="Groww Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uiNF_ZxYMGGqNoeSvWbfxpRVqDl2dZMBtdYFiVHJiZxpZZBLOclBLM9QkuUByrVi80dRs-XnW19lZKv3I8ep8F3sLyn_q7k13dyIzh6d4Kj7FDW4hj2XthRAArkYKZ1LPTaUYK2S7lO2JjMP_X481COcILpgXjE6zN8YMeYXTEOkdIVV3ro1SgfHZFjRJn2wCIG8GG6EUnYJz1gmAPlLIxwec4dXHWdnKQxXZjde0Ff1N2KEJLLSDtrBTaIYvR-oG2d_EqjVi1oGL8"/>
+</div>
+<h2 class="font-h3 text-h3 text-on-background">Investment Insights</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-xs">Facts-only. No advice.</p>
+</div>
+<!-- Main Navigation -->
+<div class="flex-1 space-y-1">
+<a class="flex items-center gap-sm px-md py-sm bg-white dark:bg-slate-900 text-[#00D09C] font-medium shadow-sm rounded-lg transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="add_comment">add_comment</span>
+                New Chat
+            </a>
+<div class="px-md py-sm opacity-50 cursor-not-allowed">
+<div class="flex items-center justify-between text-slate-600">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined">history</span>
+<span class="font-medium">Recent Analysis</span>
+</div>
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</div>
+<p class="text-[10px] text-slate-500 mt-1 ml-[32px]">In development - unlocks soon</p>
+</div>
+<div class="px-md py-sm opacity-50 cursor-not-allowed">
+<div class="flex items-center justify-between text-slate-600">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-medium">Tax Planning</span>
+</div>
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</div>
+<p class="text-[10px] text-slate-500 mt-1 ml-[32px]">In development - unlocks soon</p>
+</div>
+<div class="px-md py-sm opacity-50 cursor-not-allowed">
+<div class="flex items-center justify-between text-slate-600">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-medium">Account</span>
+</div>
+<span class="material-symbols-outlined text-[18px]">lock</span>
+</div>
+<p class="text-[10px] text-slate-500 mt-1 ml-[32px]">In development - unlocks soon</p>
+</div>
+</div>
+<!-- CTA & Footer -->
+<div class="mt-auto space-y-md pt-md border-t border-outline-variant">
+<button class="w-full py-sm px-md rounded-lg border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center justify-center gap-xs">
+                Clear History
+            </button>
+<div class="space-y-1">
+<a class="flex items-center gap-sm px-md py-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    Settings
+                </a>
+<a class="flex items-center gap-sm px-md py-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+                    Support
+                </a>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 flex flex-col h-screen overflow-hidden">
+<!-- Mobile Header (Fallback for when SideNav is hidden) -->
+<header class="md:hidden flex items-center justify-between p-md border-b border-outline-variant bg-surface-container-lowest">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-primary-container overflow-hidden">
+<img alt="Groww Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uiNF_ZxYMGGqNoeSvWbfxpRVqDl2dZMBtdYFiVHJiZxpZZBLOclBLM9QkuUByrVi80dRs-XnW19lZKv3I8ep8F3sLyn_q7k13dyIzh6d4Kj7FDW4hj2XthRAArkYKZ1LPTaUYK2S7lO2JjMP_X481COcILpgXjE6zN8YMeYXTEOkdIVV3ro1SgfHZFjRJn2wCIG8GG6EUnYJz1gmAPlLIxwec4dXHWdnKQxXZjde0Ff1N2KEJLLSDtrBTaIYvR-oG2d_EqjVi1oGL8"/>
+</div>
+<h1 class="font-h3 text-h3 text-on-background">Insights</h1>
+</div>
+<button class="p-xs text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</header>
+<!-- Chat Container -->
+<div class="flex-1 overflow-y-auto p-container-margin md:p-xl space-y-lg flex flex-col relative">
+<!-- Disclaimer Banner -->
+<div class="bg-surface-variant rounded-lg p-sm flex items-start gap-sm border border-secondary-fixed-dim shadow-sm w-full max-w-3xl mx-auto">
+<span class="material-symbols-outlined text-secondary mt-xs" data-icon="info">info</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Facts-only Assistant</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">This assistant provides factual data on mutual funds. It does not provide personalized investment advice.</p>
+</div>
+</div>
+<!-- Chat History -->
+<div class="flex-1 w-full max-w-3xl mx-auto space-y-xl pb-32">
+<!-- User Message -->
+<div class="flex justify-end">
+<div class="bg-primary-container text-on-primary-container rounded-2xl rounded-tr-sm p-md max-w-[85%] md:max-w-[70%] shadow-sm">
+<p class="font-body-md text-body-md">Should I invest in the Parag Parikh ELSS Fund?</p>
+</div>
+</div>
+<!-- Assistant Refusal Response -->
+<div class="flex justify-start gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center flex-shrink-0 mt-1"><div class="relative w-full h-full rounded-full bg-white border border-slate-200 flex items-center justify-center overflow-hidden">
+<img alt="Groww Icon" class="w-5 h-5 object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uiNF_ZxYMGGqNoeSvWbfxpRVqDl2dZMBtdYFiVHJiZxpZZBLOclBLM9QkuUByrVi80dRs-XnW19lZKv3I8ep8F3sLyn_q7k13dyIzh6d4Kj7FDW4hj2XthRAArkYKZ1LPTaUYK2S7lO2JjMP_X481COcILpgXjE6zN8YMeYXTEOkdIVV3ro1SgfHZFjRJn2wCIG8GG6EUnYJz1gmAPlLIxwec4dXHWdnKQxXZjde0Ff1N2KEJLLSDtrBTaIYvR-oG2d_EqjVi1oGL8"/>
+<div class="absolute -bottom-1 -right-1 bg-primary rounded-full p-[1px]">
+<span class="material-symbols-outlined text-[10px] text-white">smart_toy</span>
+</div>
+</div></div>
+<div class="max-w-[90%] md:max-w-[80%] space-y-md">
+<!-- Glassmorphism Card for Refusal -->
+<div class="bg-surface-container-lowest border border-error-container rounded-2xl rounded-tl-sm p-lg shadow-[0_4px_20px_rgba(15,23,42,0.05)] relative overflow-hidden">
+<!-- Subtle red hint line -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error opacity-50"></div>
+<div class="flex items-start gap-md mb-sm">
+<div class="bg-error-container text-on-error-container p-sm rounded-full flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="block">block</span>
+</div>
+<div class="pt-xs">
+<h3 class="font-h3 text-h3 text-on-surface mb-xs">Action Not Permitted</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                                        I can only provide factual information about mutual fund schemes and cannot offer investment advice or recommendations.
+                                    </p>
+</div>
+</div>
+<div class="bg-surface-container p-md rounded-lg mt-md border border-outline-variant">
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md">
+                                    For educational resources on mutual fund investing, portfolio construction, and risk assessment, you can visit the SEBI Investor Education website.
+                                </p>
+<a class="inline-flex items-center gap-xs px-md py-sm bg-white border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface hover:bg-surface-variant transition-colors shadow-sm" href="#">
+                                    Visit SEBI Investor Education
+                                    <span class="material-symbols-outlined text-[18px]" data-icon="open_in_new">open_in_new</span>
+</a>
+</div>
+</div>
+<!-- Contextual Alternatives (Bento-style suggestions) -->
+<div class="mt-lg">
+<p class="font-label-md text-label-md text-on-surface-variant mb-sm px-xs">Factual queries you can ask instead:</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-sm">
+<button class="text-left p-sm bg-surface-container-lowest border border-outline-variant rounded-lg hover:border-primary-container transition-colors shadow-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="analytics">analytics</span>
+<span class="font-body-sm text-body-sm text-on-surface">What is the historical 3-year return of the Parag Parikh ELSS Fund?</span>
+</button>
+<button class="text-left p-sm bg-surface-container-lowest border border-outline-variant rounded-lg hover:border-primary-container transition-colors shadow-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="pie_chart">pie_chart</span>
+<span class="font-body-sm text-body-sm text-on-surface">Show me the top 10 holdings of this ELSS fund.</span>
+</button>
+<button class="text-left p-sm bg-surface-container-lowest border border-outline-variant rounded-lg hover:border-primary-container transition-colors shadow-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="account_balance">account_balance</span>
+<span class="font-body-sm text-body-sm text-on-surface">What is the current AUM for Parag Parikh ELSS?</span>
+</button>
+<button class="text-left p-sm bg-surface-container-lowest border border-outline-variant rounded-lg hover:border-primary-container transition-colors shadow-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="summarize">summarize</span>
+<span class="font-body-sm text-body-sm text-on-surface">Compare the expense ratio with category average.</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Input Area (Fixed at bottom) -->
+<div class="absolute bottom-0 left-0 right-0 p-container-margin md:p-xl bg-gradient-to-t from-background via-background to-transparent pt-xl">
+<div class="max-w-3xl mx-auto relative flex items-center">
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-full py-md pl-lg pr-16 focus:ring-2 focus:ring-primary focus:border-primary shadow-[0_4px_20px_rgba(15,23,42,0.05)] font-body-md text-body-md placeholder:text-on-surface-variant transition-all outline-none" placeholder="Ask a factual question about mutual funds..." type="text"/>
+<button class="absolute right-xs top-1/2 -translate-y-1/2 w-10 h-10 bg-primary text-on-primary rounded-full flex items-center justify-center hover:bg-surface-tint transition-colors shadow-sm disabled:opacity-50 mr-xs">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

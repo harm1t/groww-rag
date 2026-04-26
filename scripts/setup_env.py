@@ -1,0 +1,186 @@
+#!/usr/bin/env python3
+"""
+Setup Environment — Interactive .env configurator for PPFAS MF FAQ Assistant.
+
+Run once to create your local .env file with all required API keys and config.
+The .env file is gitignored and NEVER committed to the repository.
+
+Usage:
+    python scripts/setup_env.py
+
+    # To overwrite an existing .env without being prompted:
+    python scripts/setup_env.py --force
+"""
+
+import os
+import sys
+import argparse
+from pathlib import Path
+from getpass import getpass
+
+# ── Where to write the .env file ────────────────────────────────────────
+ROOT_DIR = Path(__file__).resolve().parent.parent
+ENV_FILE = ROOT_DIR / ".env"
+
+# ── Field definitions ────────────────────────────────────────────────────
+# Each entry: (env_var_name, prompt, is_secret, default, required)
+FIELDS = [
+    # ── Chroma Cloud (required) ──────────────────────────────────────────
+    {
+        "section": "Chroma Cloud (trychroma.com) — required for vector store",
+        "hint": "Sign up at https://trychroma.com → Dashboard → API Keys",
+        "vars": [
+            ("CHROMA_API_KEY",    "Chroma API Key",      True,  "",                    True),
+            ("CHROMA_TENANT",     "Chroma Tenant name",  False, "",                    True),
+            ("CHROMA_DATABASE",   "Chroma Database name",False, "",                    True),
+            ("CHROMA_HOST",       "Chroma Host",         False, "api.trychroma.com",   False),
+            ("INGEST_CHROMA_COLLECTION", "Collection name", False, "mf_faq_chunks",   False),
+        ],
+    },
+    # ── Embedding (optional — defaults are fine) ─────────────────────────
+    {
+        "section": "Embedding model — local, no API key required",
+        "hint": "Press Enter to accept defaults (BAAI/bge-small-en-v1.5, batch=32)",
+        "vars": [
+            ("EMBED_MODEL",      "Embedding model",  False, "BAAI/bge-small-en-v1.5", False),
+            ("EMBED_BATCH_SIZE", "Embed batch size", False, "32",                     False),
+        ],
+    },
+    # ── LLM — Groq (future Phase 6) ─────────────────────────────────────
+    {
+        "section": "Groq LLM API — required for Phase 6 (generation)",
+        "hint": "Get your key at https://console.groq.com → API Keys",
+        "vars": [
+            ("GROQ_API_KEY",   "Groq API Key",    True,  "",                    False),
+            ("GROQ_MODEL",     "Groq model",      False, "llama-3.1-8b-instant",False),
+            ("GROQ_TEMPERATURE","Groq temperature",False, "0.1",                False),
+            ("GROQ_MAX_TOKENS", "Groq max tokens", False, "300",                False),
+        ],
+    },
+    # ── Scraping (optional) ──────────────────────────────────────────────
+    {
+        "section": "Scraping config — optional, defaults are fine",
+        "hint": "Press Enter to accept all defaults",
+        "vars": [
+            ("INGEST_USER_AGENT",     "User-Agent header",  False, "PPFAS-MF-FAQ-Bot/1.0 (local dev)", False),
+            ("INGEST_HASH_STORE_PATH","Hash store path",    False, "./data/hashes.json",               False),
+            ("INGEST_RAW_HTML_DIR",   "Raw HTML directory", False, "./data/raw",                       False),
+            ("INGEST_SCRAPED_DIR",    "Scraped JSON dir",   False, "./data/scraped",                   False),
+            ("INGEST_REQUEST_TIMEOUT","Request timeout (s)",False, "30",                               False),
+            ("INGEST_RATE_LIMIT_SECS","Rate limit (secs)",  False, "2.0",                              False),
+        ],
+    },
+]
+
+BANNER = """
+╔══════════════════════════════════════════════════════════════╗
+║         PPFAS MF FAQ Assistant — Environment Setup           ║
+║                                                              ║
+║  This will create a local .env file with your API keys.      ║
+║  The file is gitignored and NEVER committed to the repo.     ║
+╚══════════════════════════════════════════════════════════════╝
+"""
+
+
+def _prompt(label: str, default: str, is_secret: bool, required: bool) -> str:
+    """Prompt the user for a value, masking secrets."""
+    suffix = " [required]" if required else f" [{default}]" if default else " [optional, skip]"
+    full_label = f"  {label}{suffix}: "
+
+    while True:
+        try:
+            if is_secret:
+                value = getpass(full_label).strip()
+            else:
+                value = input(full_label).strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\n\nSetup cancelled.")
+            sys.exit(0)
+
+        if not value:
+            if default:
+                return default
+            if required:
+                print(f"    ✗  '{label}' is required — please enter a value.")
+                continue
+            return ""   # optional, left blank
+        return value
+
+
+def _write_env(values: dict[str, str]) -> None:
+    """Write collected values to .env."""
+    lines = [
+        "# ── PPFAS MF FAQ Assistant — Environment Variables ──",
+        "# Auto-generated by scripts/setup_env.py",
+        "# NEVER commit this file. It is gitignored.",
+        "",
+    ]
+
+    for section in FIELDS:
+        lines.append(f"# ── {section['section']} ──")
+        for var_name, _, _, _, _ in section["vars"]:
+            val = values.get(var_name, "")
+            if val:
+                lines.append(f"{var_name}={val}")
+            else:
+                lines.append(f"# {var_name}=")
+        lines.append("")
+
+    ENV_FILE.write_text("\n".join(lines), encoding="utf-8")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Create .env for PPFAS MF FAQ Assistant")
+    parser.add_argument("--force", action="store_true", help="Overwrite existing .env without asking")
+    args = parser.parse_args()
+
+    print(BANNER)
+
+    # Check existing file
+    if ENV_FILE.exists() and not args.force:
+        print(f"  .env already exists at: {ENV_FILE}")
+        try:
+            answer = input("  Overwrite it? [y/N]: ").strip().lower()
+        except (KeyboardInterrupt, EOFError):
+            print("\nCancelled.")
+            sys.exit(0)
+        if answer != "y":
+            print("  Keeping existing .env. Run with --force to overwrite.")
+            sys.exit(0)
+
+    collected: dict[str, str] = {}
+
+    for section in FIELDS:
+        print(f"\n{'─' * 60}")
+        print(f"  {section['section']}")
+        print(f"  ↳ {section['hint']}")
+        print(f"{'─' * 60}")
+
+        for var_name, label, is_secret, default, required in section["vars"]:
+            collected[var_name] = _prompt(label, default, is_secret, required)
+
+    _write_env(collected)
+
+    print(f"\n{'═' * 60}")
+    print(f"  ✓  .env written to: {ENV_FILE}")
+    print()
+
+    # Validate required keys are set
+    missing_required = [
+        var for section in FIELDS
+        for (var, _, _, _, req) in section["vars"]
+        if req and not collected.get(var)
+    ]
+    if missing_required:
+        print(f"  ⚠  Warning: required keys not set: {missing_required}")
+        print("     The pipeline will raise EnvironmentError until these are filled in.")
+    else:
+        print("  ✓  All required keys are set. You're ready to run:")
+        print()
+        print("       python -m src.ingestion.run_pipeline")
+        print()
+    print(f"{'═' * 60}\n")
+
+
+if __name__ == "__main__":
+    main()
