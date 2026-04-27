@@ -51,8 +51,13 @@ class GrowwPageChunker:
         ("fund_house",     ["fund house", "ppfas mutual fund\nrank"]),
     ]
 
+    # Fact sections contain critical short data — keep even if below MIN_TOKENS
+    FACT_SECTIONS = {"sip_details", "expense_ratio", "exit_load", "risk_rating", "stamp_duty_tax"}
+    FACT_MIN_TOKENS = 3
+
     def chunk(self, content: str, metadata: dict) -> list[dict]:
         sections = self._split_by_sections(content)
+        sections = self._merge_duplicate_sections(sections)
         chunks: list[dict] = []
         fallback = RecursiveChunker()
 
@@ -60,7 +65,8 @@ class GrowwPageChunker:
             text = section_text.strip()
             word_count = len(text.split())
 
-            if word_count < MIN_TOKENS:
+            min_thresh = self.FACT_MIN_TOKENS if section_name in self.FACT_SECTIONS else MIN_TOKENS
+            if word_count < min_thresh:
                 continue
 
             # If too large, re-split with recursive chunker
@@ -75,6 +81,17 @@ class GrowwPageChunker:
                 })
 
         return chunks
+
+    def _merge_duplicate_sections(self, sections: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
+        """Merge repeated occurrences of the same section into one chunk."""
+        merged: dict[str, list[str]] = {}
+        order: list[str] = []
+        for name, text in sections:
+            if name not in merged:
+                merged[name] = []
+                order.append(name)
+            merged[name].append(text.strip())
+        return [(name, "\n".join(merged[name])) for name in order]
 
     def _split_by_sections(self, content: str) -> List[Tuple[str, str]]:
         """Split content into named sections based on keyword matching."""

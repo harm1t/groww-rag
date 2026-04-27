@@ -8,8 +8,9 @@ chromadb>=1.0.0,<2.0
 numpy>=1.24.0,<2.0
 python-dotenv>=1.0.0,<2.0
 
-# ── Phase 6: LLM Generation — Google Gemini ──────────────────────
+# ── Phase 6: LLM Generation ──────────────────────────────────────
 google-generativeai>=0.8.0,<2.0
+groq>=1.0.0,<2.0
 
 # ── Phase 9: API ───────────────────────────────────
 fastapi>=0.110.0,<1.0

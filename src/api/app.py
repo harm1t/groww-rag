@@ -89,10 +89,14 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Configure CORS
+# Configure CORS — read extra origins from CORS_ORIGINS env var (comma-separated)
+_cors_env = os.getenv("CORS_ORIGINS", "")
+_allowed_origins = [o.strip() for o in _cors_env.split(",") if o.strip()]
+_allowed_origins += ["http://localhost:3000", "http://127.0.0.1:3000"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Next.js frontend
+    allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

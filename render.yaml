@@ -1,0 +1,50 @@
+services:
+  - type: web
+    name: ppfas-rag-backend
+    env: python
+    region: singapore         # Closest region to India (IST users)
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn src.api.app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+
+    envVars:
+      # ── Chroma Cloud (vector store) ──────────────────────────────────────
+      - key: CHROMA_HOST
+        value: api.trychroma.com
+      - key: INGEST_CHROMA_COLLECTION
+        value: mf_faq_chunks
+
+      # ── Embedding model (downloaded on first query) ───────────────────────
+      - key: EMBED_MODEL
+        value: BAAI/bge-small-en-v1.5
+      - key: EMBED_BATCH_SIZE
+        value: 32
+
+      # ── Groq LLM ──────────────────────────────────────────────────────────
+      - key: GROQ_MODEL
+        value: llama-3.1-8b-instant
+      - key: GROQ_TEMPERATURE
+        value: 0.1
+      - key: GROQ_MAX_TOKENS
+        value: 300
+
+      # ── Thread DB — writable ephemeral path on Render ─────────────────────
+      # Threads reset on each deploy (no persistent disk on free tier).
+      - key: THREAD_DB_PATH
+        value: /tmp/threads.db
+
+      # ── Secrets — set these in the Render dashboard, NOT here ─────────────
+      # Dashboard: https://dashboard.render.com → Service → Environment
+      - key: CHROMA_API_KEY
+        sync: false
+      - key: CHROMA_TENANT
+        sync: false
+      - key: CHROMA_DATABASE
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      # CORS_ORIGINS: add your Vercel URL here after frontend deploy
+      # Example: https://ppfas-rag.vercel.app
+      - key: CORS_ORIGINS
+        sync: false
