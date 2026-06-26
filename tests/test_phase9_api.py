@@ -33,15 +33,30 @@ def client(test_db_path):
     os.environ["THREAD_DB_PATH"] = test_db_path
     os.environ["RUNTIME_API_DEBUG"] = "1"  # Enable debug mode for testing
 
+    # Save original credentials
+    original_keys = {
+        k: os.environ.get(k)
+        for k in ["CHROMA_API_KEY", "CHROMA_TENANT", "CHROMA_DATABASE"]
+    }
+    # Temporarily remove them to disable RAG during generic API tests
+    for k in original_keys:
+        if k in os.environ:
+            del os.environ[k]
+
     # Create test client
     with TestClient(app) as test_client:
         yield test_client
 
-    # Cleanup
+    # Cleanup and restore
     if "THREAD_DB_PATH" in os.environ:
         del os.environ["THREAD_DB_PATH"]
     if "RUNTIME_API_DEBUG" in os.environ:
         del os.environ["RUNTIME_API_DEBUG"]
+    for k, v in original_keys.items():
+        if v is not None:
+            os.environ[k] = v
+        elif k in os.environ:
+            del os.environ[k]
 
 
 class TestHealthEndpoint:
@@ -59,13 +74,14 @@ class TestHealthEndpoint:
 class TestRootEndpoint:
     """Test the root endpoint."""
 
-    def test_root_serves_ui(self, client):
-        """Test GET / serves the chat UI HTML."""
+    def test_root_info(self, client):
+        """Test GET / returns API metadata."""
         response = client.get("/")
         assert response.status_code == 200
-        # Should serve HTML when the static file exists
-        assert "text/html" in response.headers.get("content-type", "")
-        assert "PPFAS" in response.text or "Mutual Fund" in response.text
+        assert "application/json" in response.headers.get("content-type", "")
+        data = response.json()
+        assert "Mutual Fund" in data["name"]
+        assert "version" in data
 
 
 class TestThreadEndpoints:

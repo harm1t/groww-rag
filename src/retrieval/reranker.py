@@ -49,6 +49,18 @@ class LexicalReranker:
     # Regex for detecting numeric fact content (NAV, %, ₹, Cr, etc.)
     _NUMBER_RE = re.compile(r"[\d,.]+\s*(%|₹|cr|crore|lakh|nav|sip)?", re.IGNORECASE)
 
+    # Fact-keyword → content pattern: if the query asks for a specific fact and
+    # the chunk contains matching data, the chunk almost certainly holds the answer.
+    _FACT_KEYWORDS: dict[str, re.Pattern] = {
+        "nav": re.compile(r"₹\s*[\d]+[.,][\d]+", re.IGNORECASE),
+        "expense": re.compile(r"expense\s+ratio", re.IGNORECASE),
+        "exit": re.compile(r"exit\s+load", re.IGNORECASE),
+        "aum": re.compile(r"(?:AUM|Fund\s+Size)[\s:]*₹?[\d.,]+", re.IGNORECASE),
+        "return": re.compile(r"\d+\s*(?:Year|Yr|Month|Mon)", re.IGNORECASE),
+        "sip": re.compile(r"Min\s+SIP", re.IGNORECASE),
+        "lumpsum": re.compile(r"Min\s+Lumpsum", re.IGNORECASE),
+    }
+
     def rerank(
         self,
         query: str,
@@ -82,14 +94,23 @@ class LexicalReranker:
         overlap = len(query_tokens & content_tokens)
         term_overlap = overlap / len(query_tokens)
 
-        # Boost if section title matches any query token
-        section = chunk.metadata.get("section_title", "").lower()
-        section_bonus = 0.15 if any(t in section for t in query_tokens) else 0.0
+        # Boost if section title matches any query token (use word-level tokens to
+        # avoid "fund" matching "fund_manager" for non-fund-manager queries)
+        section_tokens = self._tokenize(chunk.metadata.get("section_title", ""))
+        section_bonus = 0.10 if query_tokens & section_tokens else 0.0
 
         # Boost if chunk contains numbers (fact-heavy content)
         numeric_bonus = 0.10 if self._NUMBER_RE.search(chunk.content) else 0.0
 
-        return min(1.0, term_overlap + section_bonus + numeric_bonus)
+        # Strong boost when the query asks for a specific fact and this chunk
+        # contains the matching data (e.g. NAV query → chunk with ₹ price).
+        fact_bonus = 0.0
+        for keyword, pattern in self._FACT_KEYWORDS.items():
+            if keyword in query_tokens and pattern.search(chunk.content):
+                fact_bonus = 0.30
+                break
+
+        return min(1.0, term_overlap + section_bonus + numeric_bonus + fact_bonus)
 
     @staticmethod
     def _tokenize(text: str) -> set[str]:

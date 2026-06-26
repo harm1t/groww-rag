@@ -92,7 +92,11 @@ app = FastAPI(
 # Configure CORS — read extra origins from CORS_ORIGINS env var (comma-separated)
 _cors_env = os.getenv("CORS_ORIGINS", "")
 _allowed_origins = [o.strip() for o in _cors_env.split(",") if o.strip()]
-_allowed_origins += ["http://localhost:3000", "http://127.0.0.1:3000"]
+_allowed_origins += [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://groww-rag.vercel.app"
+]
 
 app.add_middleware(
     CORSMiddleware,
@@ -143,7 +147,7 @@ async def startup_event():
             generator = None
             safety_orchestrator = None
         else:
-            retriever = Retriever(top_k_dense=10, top_k_final=3)
+            retriever = Retriever(top_k_dense=20, top_k_final=5)
             generator = Generator()
             safety_orchestrator = SafetyOrchestrator(retriever=retriever, generator=generator)
             logging.info("RAG components initialized successfully")
@@ -250,6 +254,8 @@ def post_message(thread_id: str, request: UserMessageRequest):
     """
     try:
         return _post_message_impl(thread_id, request)
+    except HTTPException:
+        raise
     except Exception as e:
         import logging
         logging.error(f"Error in post_message: {e}")

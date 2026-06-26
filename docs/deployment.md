@@ -1,6 +1,6 @@
 # Deployment Plan
 
-This document outlines the deployment strategy for the PPFAS Mutual Fund FAQ RAG Assistant.
+This document outlines the deployment strategy for the PPFAS + JioBlackRock Mutual Fund FAQ RAG Assistant.
 
 ## Architecture Overview
 
@@ -49,7 +49,7 @@ This document outlines the deployment strategy for the PPFAS Mutual Fund FAQ RAG
 ## 1. GitHub Actions - Scheduler
 
 ### Purpose
-Run the ingestion pipeline (Phase 4.0-4.3) daily to keep the vector database updated with the latest fund information.
+Run the ingestion pipeline (Phase 4.0-4.3) daily to keep the vector database updated with the latest fund information for both PPFAS Mutual Fund (7 schemes) and JioBlackRock Mutual Fund (14 schemes).
 
 ### Configuration
 
@@ -127,7 +127,7 @@ Host the FastAPI backend that handles retrieval, generation, and safety orchestr
 ```yaml
 services:
   - type: web
-    name: ppfas-rag-backend
+    name: mf-faq-backend
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn src.api.app:app --host 0.0.0.0 --port $PORT
@@ -154,7 +154,7 @@ services:
    - Select "Web Service"
    - Connect the repository
    - Configure:
-     - **Name**: `ppfas-rag-backend`
+     - **Name**: `mf-faq-backend`
      - **Environment**: Python 3
      - **Build Command**: `pip install -r requirements.txt`
      - **Start Command**: `uvicorn src.api.app:app --host 0.0.0.0 --port $PORT`

@@ -120,8 +120,8 @@
 | R-004 | **Special Characters** | Query contains emojis, unicode | Preserve, handle encoding correctly |
 | R-005 | **Mixed Case** | Query with inconsistent capitalization | Normalize to lowercase for matching |
 | R-006 | **Typos in Scheme Name** | "Parag Parik Flexi Cap" instead of "Parag Parikh" | Attempt fuzzy matching, proceed with broad retrieval |
-| R-007 | **Abbreviations** | "PPFAS" instead of "Parag Parikh Financial Advisory Services" | Expand if known, proceed with retrieval |
-| R-008 | **Ambiguous Scheme Name** | "Large Cap" could match multiple schemes | Retrieve broadly, re-rank by relevance |
+| R-007 | **Abbreviations** | "PPFAS" or "JBR" instead of full AMC name | Expand if known via alias registry, proceed with retrieval |
+| R-008 | **Ambiguous Scheme Name** | "Large Cap" or "Flexi Cap" could match PPFAS and JioBlackRock schemes | Use qualifier (AMC name) to disambiguate; retrieve broadly if no AMC specified |
 | R-009 | **No Scheme Mentioned** | Query doesn't mention any scheme | Retrieve from all schemes |
 | R-010 | **Multiple Schemes Mentioned** | Query mentions "Flexi Cap and Large Cap" | Retrieve from both, merge results |
 | R-011 | **Non-English Characters** | Query contains Hindi or other scripts | Handle encoding, proceed with retrieval |
@@ -194,12 +194,12 @@
 |---|---|---|---|
 | G-001 | **Empty Context** | No retrieved chunks for LLM | Return "Cannot find information, browse scheme page" |
 | G-002 | **Insufficient Context** | Context doesn't answer the query | Return "Cannot find specific information, browse scheme page" |
-| G-003 | **GEMINI_API_KEY Missing** | API key not configured | Return placeholder error, log error |
-| G-004 | **GEMINI_API_KEY Invalid** | API key is invalid/expired | Return error, log error, alert |
-| G-005 | **GEMINI Rate Limit** | Hit Gemini API rate limit | Retry with backoff, return error if exhausted |
-| G-006 | **GEMINI Quota Exceeded** | Exceeded free tier quota | Return error, alert, upgrade quota |
-| G-007 | **GEMINI Timeout** | LLM generation takes >30s | Timeout, return error |
-| G-008 | **GEMINI Service Down** | Gemini API unavailable | Return error, log error, alert |
+| G-003 | **GROQ_API_KEY Missing** | API key not configured | Return placeholder error, log error |
+| G-004 | **GROQ_API_KEY Invalid** | API key is invalid/expired | Return error, log error, alert |
+| G-005 | **GROQ Rate Limit** | Hit Groq API rate limit | Retry with backoff, return error if exhausted |
+| G-006 | **GROQ Quota Exceeded** | Exceeded free tier quota | Return error, alert, upgrade quota |
+| G-007 | **GROQ Timeout** | LLM generation takes >30s | Timeout, return error |
+| G-008 | **GROQ Service Down** | Groq API unavailable | Return error, log error, alert |
 | G-009 | **Context Too Long** | Context exceeds model input limit | Truncate, log warning |
 | G-010 | **Prompt Injection** | User tries to inject malicious prompt | Reject, log security warning |
 | G-011 | **Model Hallucination** | LLM generates facts not in context | Post-validation should catch, retry |
@@ -208,7 +208,7 @@
 | G-014 | **Non-English Response** | LLM responds in different language | Retry with English-only prompt |
 | G-015 | **Malformed Response** | Response is not parseable text | Retry or use fallback |
 | G-016 | **Temperature Not Respected** | Model ignores low temperature setting | Accept, log warning |
-| G-017 | **Model Version Change** | Gemini API version changes | Test compatibility, update if needed |
+| G-017 | **Model Version Change** | Groq API version changes | Test compatibility, update if needed |
 
 ### 3.2 Response Formatting
 
@@ -285,7 +285,7 @@
 | S-021 | **Comparison Query** | "Which is better, Flexi Cap or Large Cap?" | Detect, refuse with educational link |
 | S-022 | **Recommendation Query** | "Recommend a fund for me" | Detect, refuse with educational link |
 | S-023 | **Performance Query** | "What are the returns?" | Detect, refuse with link to factsheet |
-| S-024 | **Best Fund Query** | "What's the best PPFAS fund?" | Detect, refuse with educational link |
+| S-024 | **Best Fund Query** | "What's the best PPFAS or JioBlackRock fund?" | Detect, refuse with educational link |
 | S-025 | **Personal Situation** | "I am 45, should I invest?" | Detect, refuse with educational link |
 | S-026 | **Tax Advice** | "How can I save tax?" | Detect, refuse with educational link |
 | S-027 | **Out-of-Scope Query** | "What's the weather?" | Detect, refuse politely |
@@ -472,7 +472,7 @@
 | P-009 | **Memory Bloat** | Process memory grows unbounded | Monitor, restart if needed |
 | P-010 | **Connection Pool Exhaustion** | All DB connections in use | Queue or return error |
 | P-011 | **Chroma Cloud Slow** | Chroma query latency spikes | Retry, return error if persistent |
-| P-012 | **Gemini Slow** | Gemini API latency spikes | Retry, return error if persistent |
+| P-012 | **Groq Slow** | Groq API latency spikes | Retry, return error if persistent |
 | P-013 | **Network Latency** | High network latency | Timeout appropriately |
 | P-014 | **Cold Start** | First request after restart | May be slower, acceptable |
 | P-015 | **Cache Miss** | No cached embeddings | Generate on-demand, acceptable latency |

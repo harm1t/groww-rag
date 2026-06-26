@@ -135,9 +135,9 @@ User Query → PII Guard → Intent Classifier → Query Preprocessor
 
 ### 3.1 Scope (Current Corpus)
 
-**AMC:** PPFAS Mutual Fund (Parag Parikh Financial Advisory Services)
+**AMCs:** PPFAS Mutual Fund + JioBlackRock Mutual Fund — **21 URLs total**, all Groww scheme pages.
 
-**Allowlisted URLs** (HTML only): each URL is a Groww mutual fund scheme page used as the sole indexed source for that scheme.
+**PPFAS Mutual Fund (7 schemes)**
 
 | # | Scheme | Category | URL |
 |---|---|---|---|
@@ -146,6 +146,27 @@ User Query → PII Guard → Intent Classifier → Query Preprocessor
 | 3 | Parag Parikh ELSS Tax Saver Fund | Equity — ELSS (3Y Lock-in) | https://groww.in/mutual-funds/parag-parikh-elss-tax-saver-fund-direct-growth |
 | 4 | Parag Parikh Conservative Hybrid Fund | Hybrid — Conservative | https://groww.in/mutual-funds/parag-parikh-conservative-hybrid-fund-direct-growth |
 | 5 | Parag Parikh Arbitrage Fund | Hybrid — Arbitrage | https://groww.in/mutual-funds/parag-parikh-arbitrage-fund-direct-growth |
+| 6 | Parag Parikh Liquid Fund | Debt — Liquid | https://groww.in/mutual-funds/parag-parikh-liquid-fund-direct-growth |
+| 7 | Parag Parikh Dynamic Asset Allocation Fund | Hybrid — Dynamic AA | https://groww.in/mutual-funds/parag-parikh-dynamic-asset-allocation-fund-direct-growth |
+
+**JioBlackRock Mutual Fund (14 schemes)**
+
+| # | Scheme | Category | URL |
+|---|---|---|---|
+| 8 | JioBlackRock Flexi Cap Fund | Equity — Flexi Cap | https://groww.in/mutual-funds/jioblackrock-flexi-cap-fund-direct-growth |
+| 9 | JioBlackRock Nifty SmallCap 250 Index Fund | Equity — Index | https://groww.in/mutual-funds/jioblackrock-nifty-smallcap-250-index-fund-direct-growth |
+| 10 | JioBlackRock Liquid Fund | Debt — Liquid | https://groww.in/mutual-funds/jioblackrock-liquid-fund-direct-growth |
+| 11 | JioBlackRock Nifty 50 Index Fund | Equity — Index | https://groww.in/mutual-funds/jioblackrock-nifty-50-index-fund-direct-growth |
+| 12 | JioBlackRock Nifty Midcap 150 Index Fund | Equity — Index | https://groww.in/mutual-funds/jioblackrock-nifty-midcap-150-index-fund-direct-growth |
+| 13 | JioBlackRock Sector Rotation Fund | Equity — Sectoral | https://groww.in/mutual-funds/jioblackrock-sector-rotation-fund-direct-growth |
+| 14 | JioBlackRock Nifty Next 50 Index Fund | Equity — Index | https://groww.in/mutual-funds/jioblackrock-nifty-next-50-index-fund-direct-growth |
+| 15 | JioBlackRock Large Cap Fund | Equity — Large Cap | https://groww.in/mutual-funds/jioblackrock-large-cap-fund-direct-growth |
+| 16 | JioBlackRock Money Market Fund | Debt — Money Market | https://groww.in/mutual-funds/jioblackrock-money-market-fund-direct-growth |
+| 17 | JioBlackRock Overnight Fund | Debt — Overnight | https://groww.in/mutual-funds/jioblackrock-overnight-fund-direct-growth |
+| 18 | JioBlackRock Arbitrage Fund | Hybrid — Arbitrage | https://groww.in/mutual-funds/jioblackrock-arbitrage-fund-direct-growth |
+| 19 | JioBlackRock Nifty 8-13 Yr G-Sec Index Fund | Debt — Index | https://groww.in/mutual-funds/jioblackrock-nifty-8-13-yr-g-sec-index-fund-direct-growth |
+| 20 | JioBlackRock Short Duration Fund | Debt — Short Duration | https://groww.in/mutual-funds/jioblackrock-short-duration-fund-direct-growth |
+| 21 | JioBlackRock Low Duration Fund | Debt — Low Duration | https://groww.in/mutual-funds/jioblackrock-low-duration-fund-direct-growth |
 
 > [!NOTE]
 > The problem statement targets official AMC / AMFI / SEBI sources. This phase uses Groww pages as the curated HTML corpus; expanding to primary AMC documents and additional allowlist entries is a future corpus upgrade.
@@ -358,14 +379,14 @@ The scraping service is the core data fetcher — it visits each configured URL,
 
 ```mermaid
 flowchart TD
-    START["⏰ Scheduler Trigger<br/>(9:15 AM IST)"] --> LOAD_URLS["Load URL Registry<br/>(5 configured URLs)"]
+    START["⏰ Scheduler Trigger<br/>(9:15 AM IST)"] --> LOAD_URLS["Load URL Registry<br/>(21 URLs — 7 PPFAS + 14 JBR)"]
     LOAD_URLS --> LOOP["For Each URL"]
 
     LOOP --> FETCH["HTTP GET Request<br/>(with retry + backoff)"]
     FETCH --> STATUS{"HTTP Status?"}
     STATUS -->|200 OK| PARSE["Parse HTML<br/>(BeautifulSoup)"]
     STATUS -->|4xx/5xx| LOG_ERR["Log Error<br/>+ Alert"]
-    LOG_ERR --> NEXT["Next URL"]
+    LOG_ERR --> NEXT["Next URL (21 total)"]
 
     PARSE --> EXTRACT["Extract Main Content<br/>(strip nav, footer, scripts)"]
     EXTRACT --> HASH["Compute Content Hash<br/>(SHA-256)"]
@@ -385,11 +406,12 @@ flowchart TD
 
 ##### 4.0.4 URL Registry
 
-All source URLs are maintained in a central registry with per-URL configuration:
+All source URLs are maintained in a central registry with per-URL configuration. The registry currently contains **21 entries across 2 AMCs** (7 PPFAS + 14 JioBlackRock). See `src/ingestion/url_registry.py` for the full list. Representative entries:
 
 ```python
-# src/ingestion/url_registry.py
+# src/ingestion/url_registry.py  (abbreviated — 21 entries total)
 URL_REGISTRY = [
+    # ── PPFAS Mutual Fund (7 schemes) ────────────────────────────────────────
     {
         "url": "https://groww.in/mutual-funds/parag-parikh-long-term-value-fund-direct-growth",
         "source_type": "groww_scheme_page",
@@ -400,41 +422,38 @@ URL_REGISTRY = [
         "sub_category": "flexi_cap",
     },
     {
-        "url": "https://groww.in/mutual-funds/parag-parikh-large-cap-fund-direct-growth",
+        "url": "https://groww.in/mutual-funds/parag-parikh-liquid-fund-direct-growth",
         "source_type": "groww_scheme_page",
-        "scheme_name": "Parag Parikh Large Cap Fund",
-        "scheme_id": "ppfas_large_cap",
+        "scheme_name": "Parag Parikh Liquid Fund",
+        "scheme_id": "ppfas_liquid",
         "amc": "PPFAS Mutual Fund",
+        "category": "debt",
+        "sub_category": "liquid",
+    },
+    # ... 5 more PPFAS schemes (large_cap, elss, conservative_hybrid, arbitrage, dynamic_aa)
+
+    # ── JioBlackRock Mutual Fund (14 schemes) ─────────────────────────────────
+    {
+        "url": "https://groww.in/mutual-funds/jioblackrock-flexi-cap-fund-direct-growth",
+        "source_type": "groww_scheme_page",
+        "scheme_name": "JioBlackRock Flexi Cap Fund",
+        "scheme_id": "jbr_flexi_cap",
+        "amc": "JioBlackRock Mutual Fund",
         "category": "equity",
-        "sub_category": "large_cap",
+        "sub_category": "flexi_cap",
     },
     {
-        "url": "https://groww.in/mutual-funds/parag-parikh-elss-tax-saver-fund-direct-growth",
+        "url": "https://groww.in/mutual-funds/jioblackrock-nifty-50-index-fund-direct-growth",
         "source_type": "groww_scheme_page",
-        "scheme_name": "Parag Parikh ELSS Tax Saver Fund",
-        "scheme_id": "ppfas_elss",
-        "amc": "PPFAS Mutual Fund",
+        "scheme_name": "JioBlackRock Nifty 50 Index Fund",
+        "scheme_id": "jbr_nifty_50",
+        "amc": "JioBlackRock Mutual Fund",
         "category": "equity",
-        "sub_category": "elss",
+        "sub_category": "index",
     },
-    {
-        "url": "https://groww.in/mutual-funds/parag-parikh-conservative-hybrid-fund-direct-growth",
-        "source_type": "groww_scheme_page",
-        "scheme_name": "Parag Parikh Conservative Hybrid Fund",
-        "scheme_id": "ppfas_conservative_hybrid",
-        "amc": "PPFAS Mutual Fund",
-        "category": "hybrid",
-        "sub_category": "conservative_hybrid",
-    },
-    {
-        "url": "https://groww.in/mutual-funds/parag-parikh-arbitrage-fund-direct-growth",
-        "source_type": "groww_scheme_page",
-        "scheme_name": "Parag Parikh Arbitrage Fund",
-        "scheme_id": "ppfas_arbitrage",
-        "amc": "PPFAS Mutual Fund",
-        "category": "hybrid",
-        "sub_category": "arbitrage",
-    },
+    # ... 12 more JioBlackRock schemes (nifty_smallcap_250, liquid, nifty_midcap_150,
+    #     sector_rotation, nifty_next_50, large_cap, money_market, overnight,
+    #     arbitrage, nifty_gsec_8_13, short_duration, low_duration)
 ]
 ```
 
@@ -463,7 +482,7 @@ class ScrapingService:
         self.hash_store = hash_store  # Stores previous content hashes
         self.session = requests.Session()
         self.session.headers.update({
-            "User-Agent": "PPFAS-MF-FAQ-Bot/1.0 (Data Refresh)"
+            "User-Agent": "MF-FAQ-Bot/1.0 (Data Refresh; PPFAS + JioBlackRock)"
         })
 
     def run_full_pipeline(self):
@@ -565,11 +584,11 @@ class ScrapingService:
 | Property | Detail |
 |---|---|
 | **Trigger** | Daily at 9:15 AM IST via GitHub Actions |
-| **URLs** | 5 Groww scheme pages configured in URL Registry |
+| **URLs** | 21 Groww scheme pages configured in URL Registry (7 PPFAS + 14 JioBlackRock) |
 | **Change Detection** | SHA-256 content hashing; only re-indexes on change |
 | **Retry Policy** | 3 retries with exponential backoff (5s → 10s → 20s) |
 | **Timeout** | 30 seconds per request |
-| **User-Agent** | `PPFAS-MF-FAQ-Bot/1.0 (Data Refresh)` |
+| **User-Agent** | `MF-FAQ-Bot/1.0 (Data Refresh; PPFAS + JioBlackRock)` |
 | **Error Handling** | Logs errors, continues to next URL, reports summary |
 | **Cleanup** | Deletes old chunks for URL before upserting new ones |
 | **Scope** | Not a crawler — only retrieves registry URLs. Query-time never calls live web. |
@@ -942,7 +961,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 The architecture is a **closed-book RAG system**:
 
-1. **Curated corpus** — A versioned allowlist of URLs (currently five Groww PPFAS scheme pages, HTML only) is the sole data source.
+1. **Curated corpus** — A versioned allowlist of URLs (currently 21 Groww scheme pages across 2 AMCs — PPFAS and JioBlackRock — HTML only) is the sole data source.
 2. **Scheduled ingestion** — GitHub Actions at 09:15 IST runs: scrape → normalize → chunk → embed (BAAI/bge-small-en-v1.5, 384-dim, on-runner CPU) → **upsert to Chroma Cloud** (`api.trychroma.com`) via `CHROMA_API_KEY`. No vectors stored locally.
 3. **Query-time pipeline** — Router + retriever (same **Chroma Cloud** collection; cosine similarity + metadata filters) constrain **what** may be said; prompts + post-validation enforce **how** it is said — short, factual, one source link, compliant refusal paths.
 4. **Multi-thread support** — Durable per-thread history with conservative use for retrieval query expansion only.

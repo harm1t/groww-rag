@@ -160,22 +160,31 @@ export default function ChatInterface({
   const sendMessage = async (messageText: string) => {
     if (!messageText.trim() || isLoading) return;
 
-    let threadId = activeThreadId;
-    if (!threadId) {
-      // Raise the flag BEFORE the await so the useEffect that fires when
-      // activeThreadId changes inside onCreateThread() sees it synchronously.
-      skipNextLoadRef.current = true;
-      threadId = await onCreateThread();
-      if (!threadId) {
-        skipNextLoadRef.current = false; // reset on failure
-        return;
-      }
-    }
-
     const isFirstMessage = messages.length === 0;
     setInput("");
     setMessages((prev) => [...prev, { role: "user", content: messageText }]);
     setIsLoading(true);
+
+    let threadId = activeThreadId;
+    if (!threadId) {
+      try {
+        // Raise the flag BEFORE the await so the useEffect that fires when
+        // activeThreadId changes inside onCreateThread() sees it synchronously.
+        skipNextLoadRef.current = true;
+        threadId = await onCreateThread();
+        if (!threadId) {
+          skipNextLoadRef.current = false; // reset on failure
+          throw new Error("Failed to create thread");
+        }
+      } catch (error) {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: "Error: Could not reach the server. Failed to create chat session." },
+        ]);
+        setIsLoading(false);
+        return;
+      }
+    }
 
     try {
       const response = await fetch(`${API_URL}/threads/${threadId}/messages`, {

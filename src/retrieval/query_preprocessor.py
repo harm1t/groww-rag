@@ -45,13 +45,94 @@ SCHEME_ALIASES: dict[str, str] = {
     "arbitrage": "ppfas_arbitrage",
     "ppfas arbitrage": "ppfas_arbitrage",
     "parag parikh arbitrage": "ppfas_arbitrage",
+    # Liquid
+    "liquid": "ppfas_liquid",
+    "liquid fund": "ppfas_liquid",
+    "ppfas liquid": "ppfas_liquid",
+    "parag parikh liquid": "ppfas_liquid",
+    # Dynamic Asset Allocation
+    "dynamic asset allocation": "ppfas_dynamic_aa",
+    "dynamic aa": "ppfas_dynamic_aa",
+    "dynamic allocation": "ppfas_dynamic_aa",
+    "ppfas dynamic": "ppfas_dynamic_aa",
+    "parag parikh dynamic": "ppfas_dynamic_aa",
+    # ── JioBlackRock Mutual Fund ─────────────────────────────────────────
+    # Flexi Cap — qualified only (collides with ppfas_flexi_cap)
+    "jio blackrock flexi cap": "jbr_flexi_cap",
+    "jioblackrock flexi cap": "jbr_flexi_cap",
+    "jbr flexi cap": "jbr_flexi_cap",
+    "blackrock flexi cap": "jbr_flexi_cap",
+    # Nifty SmallCap 250 Index — unique, safe unqualified
+    "nifty smallcap 250": "jbr_nifty_smallcap_250",
+    "smallcap 250": "jbr_nifty_smallcap_250",
+    "jbr smallcap": "jbr_nifty_smallcap_250",
+    "jio blackrock smallcap": "jbr_nifty_smallcap_250",
+    # Liquid — qualified only (collides with ppfas_liquid)
+    "jio blackrock liquid": "jbr_liquid",
+    "jioblackrock liquid": "jbr_liquid",
+    "jbr liquid": "jbr_liquid",
+    "blackrock liquid": "jbr_liquid",
+    # Nifty 50 Index — unique, safe unqualified
+    "nifty 50 index": "jbr_nifty_50",
+    "jbr nifty 50": "jbr_nifty_50",
+    "jio blackrock nifty 50": "jbr_nifty_50",
+    # Nifty Midcap 150 Index — unique, safe unqualified
+    "nifty midcap 150": "jbr_nifty_midcap_150",
+    "midcap 150": "jbr_nifty_midcap_150",
+    "jbr midcap": "jbr_nifty_midcap_150",
+    "jio blackrock midcap": "jbr_nifty_midcap_150",
+    # Sector Rotation — unique, safe unqualified
+    "sector rotation": "jbr_sector_rotation",
+    "jbr sector rotation": "jbr_sector_rotation",
+    "jio blackrock sector": "jbr_sector_rotation",
+    # Nifty Next 50 Index — unique, safe unqualified
+    "nifty next 50": "jbr_nifty_next_50",
+    "next 50": "jbr_nifty_next_50",
+    "jbr next 50": "jbr_nifty_next_50",
+    "jio blackrock next 50": "jbr_nifty_next_50",
+    # Large Cap — qualified only (collides with ppfas_large_cap)
+    "jio blackrock large cap": "jbr_large_cap",
+    "jioblackrock large cap": "jbr_large_cap",
+    "jbr large cap": "jbr_large_cap",
+    "blackrock large cap": "jbr_large_cap",
+    # Money Market — unique, safe unqualified
+    "money market": "jbr_money_market",
+    "jbr money market": "jbr_money_market",
+    "jio blackrock money market": "jbr_money_market",
+    # Overnight — unique, safe unqualified
+    "overnight fund": "jbr_overnight",
+    "jbr overnight": "jbr_overnight",
+    "jio blackrock overnight": "jbr_overnight",
+    # Arbitrage — qualified only (collides with ppfas_arbitrage)
+    "jio blackrock arbitrage": "jbr_arbitrage",
+    "jioblackrock arbitrage": "jbr_arbitrage",
+    "jbr arbitrage": "jbr_arbitrage",
+    "blackrock arbitrage": "jbr_arbitrage",
+    # Nifty G-Sec 8-13 Yr Index — unique, safe unqualified
+    "g-sec index": "jbr_nifty_gsec_8_13",
+    "gsec index": "jbr_nifty_gsec_8_13",
+    "nifty gsec": "jbr_nifty_gsec_8_13",
+    "8-13 yr": "jbr_nifty_gsec_8_13",
+    "jbr gsec": "jbr_nifty_gsec_8_13",
+    "jio blackrock gsec": "jbr_nifty_gsec_8_13",
+    # Short Duration — unique, safe unqualified
+    "short duration": "jbr_short_duration",
+    "jbr short duration": "jbr_short_duration",
+    "jio blackrock short duration": "jbr_short_duration",
+    # Low Duration — unique, safe unqualified
+    "low duration": "jbr_low_duration",
+    "jbr low duration": "jbr_low_duration",
+    "jio blackrock low duration": "jbr_low_duration",
 }
 
 # Normalised lowercase keys for lookup
 _ALIAS_LOWER: dict[str, str] = {k.lower(): v for k, v in SCHEME_ALIASES.items()}
 
-# Match "ppfas" or "parag parikh" prefix — high confidence indicator
-_PPFAS_PATTERN = re.compile(r"\b(ppfas|parag\s+parikh)\b", re.IGNORECASE)
+# Match any known AMC name — boosts scheme resolution confidence to 1.0
+_AMC_PATTERN = re.compile(
+    r"\b(ppfas|parag\s+parikh|jio\s*blackrock|jioblackrock|blackrock|jbr)\b",
+    re.IGNORECASE,
+)
 
 
 @dataclass
@@ -123,9 +204,9 @@ class QueryPreprocessor:
 
         alias, scheme_id = detected[0]
 
-        # Boost confidence if "ppfas" or "parag parikh" also present
+        # Boost confidence if any known AMC name is also present
         confidence = 0.75
-        if _PPFAS_PATTERN.search(normalized):
+        if _AMC_PATTERN.search(normalized):
             confidence = 1.0
 
         return scheme_id, confidence, [alias]

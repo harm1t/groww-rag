@@ -29,7 +29,7 @@ Scraped HTML → [CHUNKING] → Metadata-enriched text chunks → [EMBEDDING] �
 ```
 
 **Key constraints:**
-- Corpus is **HTML-only** (5 Groww PPFAS scheme pages). No PDFs.
+- Corpus is **HTML-only** (21 Groww scheme pages — 7 PPFAS + 14 JioBlackRock). No PDFs.
 - Embedding model: **BAAI/bge-small-en-v1.5** (local, 384-dim, max 512 tokens).
 - Target chunk size: **300–450 tokens** with 10–15% overlap.
 - Same model and prefixes must be used at both ingest and query time.
@@ -283,9 +283,9 @@ class Chunk:
     metadata: dict             # Inherited from source + enriched
     # metadata keys:
     #   source_url: str        # Groww page URL (citation)
-    #   scheme_name: str       # "Parag Parikh Flexi Cap Fund"
-    #   scheme_id: str         # "ppfas_flexi_cap"
-    #   amc: str               # "PPFAS Mutual Fund"
+    #   scheme_name: str       # e.g. "Parag Parikh Flexi Cap Fund" or "JioBlackRock Flexi Cap Fund"
+    #   scheme_id: str         # e.g. "ppfas_flexi_cap" or "jbr_flexi_cap"
+    #   amc: str               # "PPFAS Mutual Fund" | "JioBlackRock Mutual Fund"
     #   source_type: str       # "groww_scheme_page"
     #   section: str           # "expense_ratio", "exit_load", etc.
     #   chunk_index: int       # Position in chunk list
@@ -436,7 +436,7 @@ sequenceDiagram
     participant VS as ChromaDB
 
     SS->>CH: Raw text + metadata
-    CH->>CH: Split into chunks (~8-10 per page)
+    CH->>CH: Split into chunks (~9-14 per page)
     CH->>EM: List of chunk dicts
 
     loop Batch Processing (32 chunks/batch)
@@ -533,7 +533,7 @@ def query_chroma(collection, embedder, user_query: str, k: int = 10, filters: di
 ```mermaid
 flowchart LR
     subgraph SCRAPE["Phase 1: Scrape"]
-        URL["URL Registry<br/>(5 URLs)"] --> FETCH["HTTP GET<br/>+ SHA-256 check"]
+        URL["URL Registry<br/>(21 URLs)"] --> FETCH["HTTP GET<br/>+ SHA-256 check"]
         FETCH --> HTML["Raw HTML"]
     end
 
@@ -589,10 +589,12 @@ flowchart LR
 
 | Source Type | Pages | Chunks/Page | Est. Total Chunks |
 |---|---|---|---|
-| Groww scheme pages (PPFAS) | 5 | 8–10 sections each | ~40–50 |
+| Groww scheme pages — PPFAS (7 schemes) | 7 | 10–14 sections each | ~86 |
+| Groww scheme pages — JioBlackRock (14 schemes) | 14 | 9–14 sections each | ~151 |
+| **Total (current)** | **21** | | **~237** |
 
 > [!NOTE]
-> Current corpus is 5 Groww pages only. When the corpus expands (AMC pages, AMFI, SEBI), chunk count will grow to ~100–250.
+> All 237 chunks are live in Chroma Cloud. When the corpus expands further (additional AMCs, AMFI, SEBI pages), chunk count will grow accordingly — ChromaDB free tier supports up to ~1M vectors.
 
 ### 10.2 Performance Benchmarks
 
@@ -648,4 +650,25 @@ He manages the Parag Parikh Flexi Cap Fund and oversees the equity
 investment strategy across domestic and international markets.
 Source: Groww
 Section: fund_manager
+```
+
+**Chunk E — Groww Structured (JioBlackRock Overview):**
+```
+Scheme: JioBlackRock Flexi Cap Fund
+Category: Equity — Flexi Cap
+AMC: JioBlackRock Mutual Fund
+NAV: ₹9.84 | AUM: ₹XXX Cr
+Min SIP: ₹500 | Min Lumpsum: ₹5,000
+Source: Groww
+Section: overview
+```
+
+**Chunk F — Groww Structured (JioBlackRock Expense Ratio):**
+```
+Scheme: JioBlackRock Nifty 50 Index Fund
+Expense Ratio (Direct Plan): 0.20%
+Category: Equity — Index (Passive)
+Benchmark: Nifty 50 TRI
+Source: Groww
+Section: expense_ratio
 ```

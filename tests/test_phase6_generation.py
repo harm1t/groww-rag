@@ -131,9 +131,9 @@ class TestPromptBuilder:
         assert "failed compliance validation" in turn
 
     def test_allowlisted_urls_count(self):
-        # Must have exactly 5 scheme pages + 2 educational links
+        # 7 PPFAS + 14 JioBlackRock scheme pages + 2 educational links
         scheme_urls = [u for u in ALLOWLISTED_URLS if "groww.in" in u]
-        assert len(scheme_urls) == 5, f"Expected 5 scheme URLs, got {len(scheme_urls)}"
+        assert len(scheme_urls) == 21, f"Expected 21 scheme URLs, got {len(scheme_urls)}"
 
     def test_all_allowlisted_urls_are_https(self):
         for url in ALLOWLISTED_URLS:
