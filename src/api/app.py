@@ -123,39 +123,42 @@ def get_debug_mode() -> bool:
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize dependencies on startup."""
-    global thread_store, context_manager, safety_orchestrator, retriever, generator
-
-    # Initialize thread store
+    """Initialize only the thread store on startup — RAG components load lazily."""
+    global thread_store, context_manager
     db_path = os.getenv("THREAD_DB_PATH", "data/threads.db")
     thread_store = ThreadStore(db_path)
     context_manager = ContextManager(thread_store)
 
-    # Initialize real components
+
+def _ensure_rag_initialized() -> None:
+    """Lazy-initialize RAG components on first request.
+
+    Keeps startup fast so Render's health check passes before the
+    embedding model finishes downloading (~30-60 s on cold start).
+    """
+    global retriever, generator, safety_orchestrator
+    if safety_orchestrator is not None:
+        return
+
+    import logging
+    import traceback
+
     try:
         from src.retrieval.retriever import Retriever
         from src.generation.generator import Generator
         from src.safety.orchestrator import SafetyOrchestrator
 
-        import logging
-        logging.info("Initializing RAG components...")
-
-        # Check if ChromaDB credentials are set
         if not os.getenv("CHROMA_API_KEY") or not os.getenv("CHROMA_TENANT") or not os.getenv("CHROMA_DATABASE"):
-            logging.warning("ChromaDB credentials not set. RAG features will be disabled.")
-            retriever = None
-            generator = None
-            safety_orchestrator = None
-        else:
-            retriever = Retriever(top_k_dense=20, top_k_final=5)
-            generator = Generator()
-            safety_orchestrator = SafetyOrchestrator(retriever=retriever, generator=generator)
-            logging.info("RAG components initialized successfully")
+            logging.warning("ChromaDB credentials not set — RAG disabled.")
+            return
+
+        logging.info("Initializing RAG components (first request)…")
+        retriever = Retriever(top_k_dense=20, top_k_final=5)
+        generator = Generator()
+        safety_orchestrator = SafetyOrchestrator(retriever=retriever, generator=generator)
+        logging.info("RAG components ready.")
     except Exception as e:
-        import logging
-        import traceback
-        logging.error(f"Failed to initialize RAG components: {e}")
-        logging.error(traceback.format_exc())
+        logging.error(f"RAG init failed: {e}\n{traceback.format_exc()}")
         retriever = None
         generator = None
         safety_orchestrator = None
@@ -265,6 +268,8 @@ def post_message(thread_id: str, request: UserMessageRequest):
 
 
 def _post_message_impl(thread_id: str, request: UserMessageRequest):
+    _ensure_rag_initialized()
+
     if not thread_store:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
