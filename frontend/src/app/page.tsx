@@ -11,26 +11,8 @@ interface Thread {
   message_count: number;
 }
 
-// ── Groww logo mark (matches real Groww branding) ───────────────────────────
 const GrowwLogoMark = ({ size = 28 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="growwBgSidebar" x1="40" y1="0" x2="0" y2="40" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#6B6FF0" />
-        <stop offset="50%" stopColor="#5059D6" />
-        <stop offset="100%" stopColor="#00C896" />
-      </linearGradient>
-      <clipPath id="growwCircleSidebar">
-        <circle cx="20" cy="20" r="20" />
-      </clipPath>
-    </defs>
-    <circle cx="20" cy="20" r="20" fill="url(#growwBgSidebar)" />
-    <g clipPath="url(#growwCircleSidebar)">
-      <path d="M-2 37 L5 26 L10 31 L18 19 L23 25 L31 14 L37 20 L44 13 L44 44 L-2 44 Z" fill="white" />
-      <path d="M-2 32 L5 21 L10 26 L18 14 L23 20 L31 9 L37 15 L44 8 L44 38 L-2 40 Z" fill="white" opacity="0.55" />
-      <path d="M-2 27 L5 16 L10 21 L18 9 L23 15 L31 4 L37 10 L44 3 L44 32 L-2 34 Z" fill="white" opacity="0.25" />
-    </g>
-  </svg>
+  <img src="/groww-logo.png" alt="Groww" width={size} height={size} style={{ objectFit: "contain" }} />
 );
 
 const LOCKED_NAV = [
