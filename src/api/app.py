@@ -383,6 +383,100 @@ async def admin_reindex(request: ReindexRequest):
     )
 
 
+_TICKER_FUNDS = {
+    "ppfas_flexi_cap": "PPFAS Flexi Cap",
+    "ppfas_large_cap": "PPFAS Large Cap",
+    "ppfas_elss": "PPFAS ELSS",
+    "ppfas_conservative_hybrid": "PPFAS Conservative Hybrid",
+    "ppfas_arbitrage": "PPFAS Arbitrage",
+    "ppfas_liquid": "PPFAS Liquid",
+    "ppfas_dynamic_aa": "PPFAS Dynamic AA",
+    "jbr_flexi_cap": "JBR Flexi Cap",
+    "jbr_nifty_50": "JBR Nifty 50",
+    "jbr_nifty_midcap_150": "JBR Nifty Midcap 150",
+    "jbr_nifty_smallcap_250": "JBR Nifty Smallcap 250",
+    "jbr_nifty_next_50": "JBR Nifty Next 50",
+    "jbr_large_cap": "JBR Large Cap",
+    "jbr_liquid": "JBR Liquid",
+    "jbr_money_market": "JBR Money Market",
+    "jbr_overnight": "JBR Overnight",
+    "jbr_arbitrage": "JBR Arbitrage",
+    "jbr_nifty_gsec_8_13": "JBR G-Sec 8-13Y",
+    "jbr_short_duration": "JBR Short Duration",
+    "jbr_low_duration": "JBR Low Duration",
+    "jbr_sector_rotation": "JBR Sector Rotation",
+}
+
+
+@app.get("/ticker")
+async def get_ticker():
+    """Return NAV, AUM, expense ratio and min SIP for all funds (ticker tape)."""
+    import json as _json
+    import re as _re
+
+    scraped_dir = "data/scraped"
+    if not os.path.exists(scraped_dir):
+        return {"items": []}
+
+    batches = sorted(
+        d for d in os.listdir(scraped_dir)
+        if os.path.isdir(os.path.join(scraped_dir, d))
+    )
+    fund_data: dict = {}
+
+    for batch in reversed(batches):
+        batch_path = os.path.join(scraped_dir, batch)
+        for fund_id, display_name in _TICKER_FUNDS.items():
+            if fund_id in fund_data:
+                continue
+            file_path = os.path.join(batch_path, f"{fund_id}.json")
+            if not os.path.exists(file_path):
+                continue
+            with open(file_path) as f:
+                data = _json.load(f)
+            content = data.get("content", "")
+
+            nav_m    = _re.search(r'NAV:[^\n]*\n₹([\d,]+\.[\d]+)', content)
+            change_m = _re.search(r'([+-][\d.]+)\n%\n1D', content)
+            aum_m    = _re.search(r'Fund size \(AUM\)\n₹([\d,]+\.[\d]+ Cr)', content)
+            exp_m    = _re.search(r'Expense ratio\n([\d.]+%)', content)
+            sip_m    = _re.search(r'Min\. for SIP\n₹([\d,]+)', content)
+
+            fund_data[fund_id] = {
+                "name":          display_name,
+                "nav":           f"₹{nav_m.group(1)}"    if nav_m    else None,
+                "change":        change_m.group(1)        if change_m else None,
+                "aum":           f"₹{aum_m.group(1)}"    if aum_m    else None,
+                "expense_ratio": exp_m.group(1)           if exp_m    else None,
+                "min_sip":       f"₹{sip_m.group(1)}"    if sip_m    else None,
+            }
+
+        if len(fund_data) == len(_TICKER_FUNDS):
+            break
+
+    # Build flat interleaved list: NAV → AUM → Expense Ratio → Min SIP per fund
+    items = []
+    for fund_id in _TICKER_FUNDS:
+        if fund_id not in fund_data:
+            continue
+        fd = fund_data[fund_id]
+        name = fd["name"]
+        if fd["nav"]:
+            items.append({"label": name, "metric": "NAV",
+                          "value": fd["nav"], "change": fd["change"]})
+        if fd["aum"]:
+            items.append({"label": name, "metric": "AUM",
+                          "value": fd["aum"], "change": None})
+        if fd["expense_ratio"]:
+            items.append({"label": name, "metric": "Expense Ratio",
+                          "value": fd["expense_ratio"], "change": None})
+        if fd["min_sip"]:
+            items.append({"label": name, "metric": "Min SIP",
+                          "value": fd["min_sip"], "change": None})
+
+    return {"items": items}
+
+
 @app.get("/")
 async def root():
     """API information endpoint."""

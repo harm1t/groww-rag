@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Clock, FileText, User, Settings, HelpCircle, Lock, Trash2, MessageSquare } from "lucide-react";
+import { Plus, Trash2, MessageSquare } from "lucide-react";
 import ChatInterface from "@/components/ChatInterface";
+import Ticker from "@/components/Ticker";
 
 interface Thread {
   id: string;
@@ -10,16 +11,6 @@ interface Thread {
   updated_at: string;
   message_count: number;
 }
-
-const GrowwLogoMark = ({ size = 28 }: { size?: number }) => (
-  <img src="/groww-logo.png" alt="Groww" width={size} height={size} style={{ objectFit: "contain" }} />
-);
-
-const LOCKED_NAV = [
-  { Icon: Clock, label: "Recent Analysis" },
-  { Icon: FileText, label: "Tax Planning" },
-  { Icon: User, label: "Account" },
-];
 
 const TITLES_KEY = "thread_titles";
 
@@ -78,21 +69,21 @@ export default function Home() {
   };
 
   return (
-    <main className="flex h-screen bg-[#f8f9ff] overflow-hidden">
-      {/* ── Sidebar ──────────────────────────────────────────── */}
-      <aside
-        className="w-[260px] bg-white flex flex-col flex-shrink-0 border-r border-gray-100"
+    <>
+      {/* ── Fixed NAV Ticker ─────────────────────────────────── */}
+      <Ticker />
+
+      {/* ── Fixed Sidebar ────────────────────────────────────── */}
+      <nav
+        className="hidden md:flex flex-col fixed left-0 top-9 bottom-0 w-64 bg-white border-r border-gray-100 z-50"
         style={{ boxShadow: "2px 0 16px rgba(15,23,42,0.04)" }}
       >
         {/* Logo */}
         <div className="px-5 py-5 border-b border-gray-50">
           <div className="flex items-center gap-2.5">
-            <GrowwLogoMark size={30} />
+            <img src="/groww-logo.png" alt="Groww" width={30} height={30} style={{ objectFit: "contain" }} />
             <div>
-              <div
-                className="font-bold text-[15px] leading-none tracking-tight"
-                style={{ color: "#3c3c3c" }}
-              >
+              <div className="font-bold text-[15px] leading-none tracking-tight" style={{ color: "#3c3c3c" }}>
                 Groww
               </div>
               <div className="text-[11px] text-gray-400 mt-0.5">Facts-only. No advice.</div>
@@ -153,55 +144,22 @@ export default function Home() {
               ))}
             </>
           )}
-
-          {/* Locked tools */}
-          <div className="mt-3">
-            <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider px-2 mb-1.5">
-              Tools
-            </div>
-            {LOCKED_NAV.map(({ Icon, label }) => (
-              <div
-                key={label}
-                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl mb-0.5 opacity-45 cursor-not-allowed select-none"
-              >
-                <Icon className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1">
-                    <span className="text-[13px] font-medium text-gray-500 truncate">{label}</span>
-                    <Lock className="w-2.5 h-2.5 text-gray-400 flex-shrink-0" />
-                  </div>
-                  <div className="text-[10px] text-gray-400">In development · unlocks soon</div>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
 
-        {/* Bottom controls */}
+        {/* Bottom */}
         <div className="px-4 pb-4 pt-3 border-t border-gray-50">
           <button
             onClick={() => { setThreads([]); setActiveThreadId(null); }}
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[#ba1a1a] text-sm font-medium transition-all mb-1 hover:bg-red-50"
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[#ba1a1a] text-sm font-medium transition-all hover:bg-red-50"
           >
             <Trash2 className="w-3.5 h-3.5" />
             Clear History
           </button>
-          <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-500 hover:bg-gray-50 transition-all cursor-pointer mb-0.5">
-            <Settings className="w-3.5 h-3.5" />
-            <span className="text-sm">Settings</span>
-          </div>
-          <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl opacity-45 cursor-not-allowed select-none">
-            <HelpCircle className="w-3.5 h-3.5 text-gray-400" />
-            <div className="flex items-center gap-1">
-              <span className="text-sm text-gray-500">Support</span>
-              <Lock className="w-2.5 h-2.5 text-gray-400" />
-            </div>
-          </div>
         </div>
-      </aside>
+      </nav>
 
-      {/* ── Main ─────────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      {/* ── Main Content (offset by ticker + sidebar) ─────────── */}
+      <div className="md:ml-64 pt-9 h-screen flex flex-col">
         <ChatInterface
           activeThreadId={activeThreadId}
           onCreateThread={createThread}
@@ -209,6 +167,6 @@ export default function Home() {
           onSaveTitle={saveThreadTitle}
         />
       </div>
-    </main>
+    </>
   );
 }
