@@ -490,9 +490,11 @@ async def root():
         "version": "1.0.0",
         "frontend": "Next.js UI (see /frontend directory)",
         "health": "/health",
+        "ticker": "/ticker",
         "endpoints": {
             "threads": "/threads",
             "messages": "/threads/{id}/messages",
-            "admin": "/admin/reindex"
+            "admin": "/admin/reindex",
+            "ticker": "/ticker"
         }
     }
