@@ -14,10 +14,8 @@ env/
 
 # Data (large/generated — excluded from git)
 # data/raw/     → raw HTML fetched from Groww (large, reproducible)
-# data/scraped/ → chunked JSON per run (large, reproducible)
 # data/chroma/  → no longer used (Chroma Cloud is remote)
 data/raw/
-data/scraped/
 data/chroma/
 
 # hashes.json MUST be tracked — the GitHub Actions runner reads it

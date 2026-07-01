@@ -1,0 +1,20 @@
+{
+  "run_id": "20260425T090202Z",
+  "timestamp": "2026-04-25T09:02:24.275781+00:00",
+  "url_count": 5,
+  "scraped": 5,
+  "updated": 5,
+  "skipped": 0,
+  "errors": 0,
+  "chunks_produced": 46,
+  "chunks_embedded": 46,
+  "chunks_upserted": 46,
+  "chroma_total": 46,
+  "updated_schemes": [
+    "ppfas_flexi_cap",
+    "ppfas_large_cap",
+    "ppfas_elss",
+    "ppfas_conservative_hybrid",
+    "ppfas_arbitrage"
+  ]
+}
