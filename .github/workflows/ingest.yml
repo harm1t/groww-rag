@@ -58,8 +58,16 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      # ── 4. (Optional) Force rescrape ─────────────────────────────────────
-      - name: "④ Force rescrape (clear hashes if requested)"
+      # ── 4. Cache HuggingFace model ───────────────────────────────────────
+      # Caches BAAI/bge-small-en-v1.5 so HF doesn't 429-rate-limit the runner.
+      - name: "④ Cache HuggingFace embedding model"
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface/hub
+          key: hf-bge-small-en-v1.5
+
+      # ── 5. (Optional) Force rescrape ─────────────────────────────────────
+      - name: "⑤ Force rescrape (clear hashes if requested)"
         if: github.event.inputs.force_rescrape == 'true'
         run: |
           echo "{}" > data/hashes.json
@@ -72,7 +80,7 @@ jobs:
       #   Phase 4.2  Embed    — BAAI/bge-small-en-v1.5 (384-dim, local on runner)
       #   Phase 4.3  Upsert   — HTTPS POST to Chroma Cloud (api.trychroma.com)
       #
-      - name: "⑤ Run ingestion pipeline"
+      - name: "⑥ Run ingestion pipeline"
         env:
           # ── Embedding (runs locally on runner — no API key needed) ────────
           EMBED_MODEL: BAAI/bge-small-en-v1.5
@@ -102,7 +110,7 @@ jobs:
       # re-scraping + re-upserting identical content on the next daily run.
       # Raw HTML (data/raw/) is also committed for traceability.
       #
-      - name: "⑥ Commit updated hashes and scraped content"
+      - name: "⑦ Commit updated hashes and scraped content"
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -115,7 +123,7 @@ jobs:
           git push || echo "Nothing to push."
 
       # ── 7. Print run summary ─────────────────────────────────────────────
-      - name: "⑦ Print run summary"
+      - name: "⑧ Print run summary"
         if: always()
         run: |
           echo "──────────────────────────────────────────"
