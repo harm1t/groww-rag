@@ -6,6 +6,7 @@ Per §9.1: Endpoints for health, threads, messages, and admin reindex.
 """
 
 import os
+import threading
 import time
 from typing import TYPE_CHECKING, Any, Optional
 
@@ -114,54 +115,73 @@ retriever: Optional[Any] = None
 generator: Optional[Any] = None
 safety_orchestrator: Optional[Any] = None
 
+_rag_ready = threading.Event()   # set when RAG init completes (success or failure)
+_rag_init_started = False
+
 # Debug mode flag (from env var) - read dynamically
 def get_debug_mode() -> bool:
     return os.getenv("RUNTIME_API_DEBUG", "0") == "1"
 
 
-# ── Startup Event ───────────────────────────────────────────────────────────────
+# ── RAG background initializer ─────────────────────────────────────────────────
 
-@app.on_event("startup")
-async def startup_event():
-    """Initialize only the thread store on startup — RAG components load lazily."""
-    global thread_store, context_manager
-    db_path = os.getenv("THREAD_DB_PATH", "data/threads.db")
-    thread_store = ThreadStore(db_path)
-    context_manager = ContextManager(thread_store)
+def _bg_init_rag() -> None:
+    """Load the embedding model and connect to Chroma in a background thread.
 
-
-def _ensure_rag_initialized() -> None:
-    """Lazy-initialize RAG components on first request.
-
-    Keeps startup fast so Render's health check passes before the
-    embedding model finishes downloading (~30-60 s on cold start).
+    Starts immediately at app startup so the model is warm before the first
+    user message arrives — avoiding the 90-second download on first request.
+    Health check (/health) returns 200 instantly regardless.
     """
-    global retriever, generator, safety_orchestrator
-    if safety_orchestrator is not None:
-        return
-
     import logging
     import traceback
+    global retriever, generator, safety_orchestrator
 
     try:
         from src.retrieval.retriever import Retriever
         from src.generation.generator import Generator
         from src.safety.orchestrator import SafetyOrchestrator
 
-        if not os.getenv("CHROMA_API_KEY") or not os.getenv("CHROMA_TENANT") or not os.getenv("CHROMA_DATABASE"):
-            logging.warning("ChromaDB credentials not set — RAG disabled.")
+        if not (os.getenv("CHROMA_API_KEY") and os.getenv("CHROMA_TENANT") and os.getenv("CHROMA_DATABASE")):
+            logging.warning("[RAG] ChromaDB credentials not set — RAG disabled.")
             return
 
-        logging.info("Initializing RAG components (first request)…")
+        logging.info("[RAG] Background init: loading embedding model + connecting to Chroma…")
         retriever = Retriever(top_k_dense=20, top_k_final=5)
         generator = Generator()
         safety_orchestrator = SafetyOrchestrator(retriever=retriever, generator=generator)
-        logging.info("RAG components ready.")
+        logging.info("[RAG] Background init complete — ready to answer questions.")
     except Exception as e:
-        logging.error(f"RAG init failed: {e}\n{traceback.format_exc()}")
+        logging.error(f"[RAG] Background init failed: {e}\n{traceback.format_exc()}")
         retriever = None
         generator = None
         safety_orchestrator = None
+    finally:
+        _rag_ready.set()
+
+
+# ── Startup Event ───────────────────────────────────────────────────────────────
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize thread store and kick off RAG loading in a background thread."""
+    global thread_store, context_manager, _rag_init_started
+    db_path = os.getenv("THREAD_DB_PATH", "data/threads.db")
+    thread_store = ThreadStore(db_path)
+    context_manager = ContextManager(thread_store)
+
+    if not _rag_init_started:
+        _rag_init_started = True
+        t = threading.Thread(target=_bg_init_rag, daemon=True, name="rag-init")
+        t.start()
+
+
+def _ensure_rag_initialized() -> None:
+    """Block until background RAG init finishes (max 3 min), then return."""
+    if safety_orchestrator is not None:
+        return
+    import logging
+    logging.info("[RAG] Waiting for background init to complete…")
+    _rag_ready.wait(timeout=180)   # 3-minute ceiling; Cloudflare cuts at ~100 s anyway
 
 
 # ── Endpoints ──────────────────────────────────────────────────────────────────
