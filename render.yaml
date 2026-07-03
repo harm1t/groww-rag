@@ -4,7 +4,7 @@ services:
     env: python
     region: singapore         # Closest region to India (IST users)
     plan: free
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt && python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('BAAI/bge-small-en-v1.5')"
     startCommand: uvicorn src.api.app:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
 
