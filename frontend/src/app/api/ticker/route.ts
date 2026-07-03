@@ -131,18 +131,28 @@ export async function GET() {
       }
     }
 
+    // Interleave PPFAS and JBR funds so both appear immediately in the ticker
+    const ppfasIds = allFundIds.filter((id) => id.startsWith("ppfas"));
+    const jbrIds   = allFundIds.filter((id) => id.startsWith("jbr"));
+    const interleavedIds: string[] = [];
+    const maxLen = Math.max(ppfasIds.length, jbrIds.length);
+    for (let i = 0; i < maxLen; i++) {
+      if (ppfasIds[i]) interleavedIds.push(ppfasIds[i]);
+      if (jbrIds[i])   interleavedIds.push(jbrIds[i]);
+    }
+
     const items: TickerItem[] = [];
-    for (const fundId of allFundIds) {
+    for (const fundId of interleavedIds) {
       const fd = fundData[fundId];
       if (!fd) continue;
       if (fd.nav)
-        items.push({ label: fd.name, metric: "NAV",          value: fd.nav,           change: fd.change });
+        items.push({ label: fd.name, metric: "NAV",           value: fd.nav,           change: fd.change });
       if (fd.aum)
-        items.push({ label: fd.name, metric: "AUM",          value: fd.aum,           change: null });
+        items.push({ label: fd.name, metric: "AUM",           value: fd.aum,           change: null });
       if (fd.expense_ratio)
         items.push({ label: fd.name, metric: "Expense Ratio", value: fd.expense_ratio, change: null });
       if (fd.min_sip)
-        items.push({ label: fd.name, metric: "Min SIP",      value: fd.min_sip,       change: null });
+        items.push({ label: fd.name, metric: "Min SIP",       value: fd.min_sip,       change: null });
     }
 
     return Response.json({ items });
