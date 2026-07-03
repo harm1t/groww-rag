@@ -17,13 +17,23 @@ const METRIC_COLORS: Record<string, string> = {
 
 export default function Ticker() {
   const [items, setItems] = useState<TickerItem[]>([]);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
   useEffect(() => {
-    fetch(`${API_URL}/ticker`)
-      .then((r) => r.json())
-      .then((d) => setItems(d.items || []))
-      .catch(() => {});
+    // Primary: Vercel API route (reads directly from GitHub repo — no Render needed)
+    // Fallback: Render backend (kept for local dev where /api/ticker hits Next.js server)
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const primary = "/api/ticker";
+    const fallback = `${API_URL}/ticker`;
+
+    fetch(primary)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((d) => { if (d.items?.length > 0) setItems(d.items); else throw new Error("empty"); })
+      .catch(() =>
+        fetch(fallback)
+          .then((r) => r.json())
+          .then((d) => setItems(d.items || []))
+          .catch(() => {})
+      );
   }, []);
 
   const doubled = items.length > 0 ? [...items, ...items] : [];
