@@ -1,0 +1,25 @@
+{
+  "run_id": "20260705T065852Z",
+  "timestamp": "2026-07-05T07:00:03.037784+00:00",
+  "url_count": 21,
+  "scraped": 21,
+  "updated": 10,
+  "skipped": 11,
+  "errors": 0,
+  "chunks_produced": 116,
+  "chunks_embedded": 116,
+  "chunks_upserted": 116,
+  "chroma_total": 237,
+  "updated_schemes": [
+    "ppfas_flexi_cap",
+    "ppfas_elss",
+    "ppfas_arbitrage",
+    "ppfas_liquid",
+    "ppfas_dynamic_aa",
+    "jbr_flexi_cap",
+    "jbr_liquid",
+    "jbr_nifty_50",
+    "jbr_sector_rotation",
+    "jbr_overnight"
+  ]
+}
