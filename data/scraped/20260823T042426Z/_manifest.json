@@ -1,0 +1,24 @@
+{
+  "run_id": "20260823T042426Z",
+  "timestamp": "2026-08-23T04:25:36.467057+00:00",
+  "url_count": 21,
+  "scraped": 21,
+  "updated": 9,
+  "skipped": 12,
+  "errors": 0,
+  "chunks_produced": 104,
+  "chunks_embedded": 104,
+  "chunks_upserted": 104,
+  "chroma_total": 237,
+  "updated_schemes": [
+    "ppfas_flexi_cap",
+    "ppfas_arbitrage",
+    "ppfas_liquid",
+    "ppfas_dynamic_aa",
+    "jbr_flexi_cap",
+    "jbr_liquid",
+    "jbr_sector_rotation",
+    "jbr_money_market",
+    "jbr_overnight"
+  ]
+}
