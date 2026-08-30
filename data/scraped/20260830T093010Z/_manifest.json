@@ -1,0 +1,33 @@
+{
+  "run_id": "20260830T093010Z",
+  "timestamp": "2026-08-30T09:31:32.803650+00:00",
+  "url_count": 21,
+  "scraped": 21,
+  "updated": 18,
+  "skipped": 3,
+  "errors": 0,
+  "chunks_produced": 198,
+  "chunks_embedded": 198,
+  "chunks_upserted": 198,
+  "chroma_total": 236,
+  "updated_schemes": [
+    "ppfas_large_cap",
+    "ppfas_elss",
+    "ppfas_arbitrage",
+    "ppfas_liquid",
+    "ppfas_dynamic_aa",
+    "jbr_flexi_cap",
+    "jbr_nifty_smallcap_250",
+    "jbr_liquid",
+    "jbr_nifty_50",
+    "jbr_nifty_midcap_150",
+    "jbr_sector_rotation",
+    "jbr_nifty_next_50",
+    "jbr_large_cap",
+    "jbr_money_market",
+    "jbr_overnight",
+    "jbr_nifty_gsec_8_13",
+    "jbr_short_duration",
+    "jbr_low_duration"
+  ]
+}
