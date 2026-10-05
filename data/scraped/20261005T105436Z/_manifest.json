@@ -1,0 +1,27 @@
+{
+  "run_id": "20261005T105436Z",
+  "timestamp": "2026-10-05T10:55:49.471432+00:00",
+  "url_count": 21,
+  "scraped": 21,
+  "updated": 12,
+  "skipped": 9,
+  "errors": 0,
+  "chunks_produced": 126,
+  "chunks_embedded": 126,
+  "chunks_upserted": 126,
+  "chroma_total": 237,
+  "updated_schemes": [
+    "ppfas_liquid",
+    "jbr_nifty_smallcap_250",
+    "jbr_liquid",
+    "jbr_nifty_50",
+    "jbr_nifty_midcap_150",
+    "jbr_nifty_next_50",
+    "jbr_money_market",
+    "jbr_overnight",
+    "jbr_arbitrage",
+    "jbr_nifty_gsec_8_13",
+    "jbr_short_duration",
+    "jbr_low_duration"
+  ]
+}
