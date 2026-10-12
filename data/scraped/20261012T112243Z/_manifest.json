@@ -1,0 +1,22 @@
+{
+  "run_id": "20261012T112243Z",
+  "timestamp": "2026-10-12T11:23:54.878430+00:00",
+  "url_count": 21,
+  "scraped": 21,
+  "updated": 7,
+  "skipped": 14,
+  "errors": 0,
+  "chunks_produced": 76,
+  "chunks_embedded": 76,
+  "chunks_upserted": 76,
+  "chroma_total": 235,
+  "updated_schemes": [
+    "ppfas_flexi_cap",
+    "ppfas_liquid",
+    "jbr_flexi_cap",
+    "jbr_nifty_smallcap_250",
+    "jbr_liquid",
+    "jbr_overnight",
+    "jbr_nifty_gsec_8_13"
+  ]
+}
