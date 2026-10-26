@@ -1,0 +1,19 @@
+{
+  "run_id": "20261026T092404Z",
+  "timestamp": "2026-10-26T09:25:17.314657+00:00",
+  "url_count": 21,
+  "scraped": 21,
+  "updated": 4,
+  "skipped": 17,
+  "errors": 0,
+  "chunks_produced": 41,
+  "chunks_embedded": 41,
+  "chunks_upserted": 41,
+  "chroma_total": 235,
+  "updated_schemes": [
+    "ppfas_flexi_cap",
+    "ppfas_liquid",
+    "jbr_liquid",
+    "jbr_overnight"
+  ]
+}
