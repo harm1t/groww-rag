@@ -1,0 +1,23 @@
+{
+  "run_id": "20261102T114410Z",
+  "timestamp": "2026-11-02T11:45:26.706172+00:00",
+  "url_count": 21,
+  "scraped": 21,
+  "updated": 8,
+  "skipped": 13,
+  "errors": 0,
+  "chunks_produced": 84,
+  "chunks_embedded": 84,
+  "chunks_upserted": 84,
+  "chroma_total": 235,
+  "updated_schemes": [
+    "ppfas_flexi_cap",
+    "ppfas_arbitrage",
+    "ppfas_liquid",
+    "jbr_flexi_cap",
+    "jbr_liquid",
+    "jbr_overnight",
+    "jbr_short_duration",
+    "jbr_low_duration"
+  ]
+}
