@@ -1,0 +1,17 @@
+{
+  "run_id": "20261123T134330Z",
+  "timestamp": "2026-11-23T13:44:34.205443+00:00",
+  "url_count": 21,
+  "scraped": 21,
+  "updated": 2,
+  "skipped": 19,
+  "errors": 0,
+  "chunks_produced": 20,
+  "chunks_embedded": 20,
+  "chunks_upserted": 20,
+  "chroma_total": 235,
+  "updated_schemes": [
+    "jbr_liquid",
+    "jbr_overnight"
+  ]
+}
